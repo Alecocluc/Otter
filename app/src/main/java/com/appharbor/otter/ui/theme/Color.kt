@@ -35,15 +35,21 @@ val GlassWarning = Color(0xFFFFAB00)              // Amber
 val GlassError = Color(0xFFFF5252)                // Bright red
 val GlassInfo = Color(0xFF40C4FF)                 // Light blue
 
-// Light theme variants (for future light mode support)
-val LightGlassBackgroundStart = Color(0xFFE8EAF6)
-val LightGlassBackgroundMid = Color(0xFFC5CAE9)
-val LightGlassBackgroundEnd = Color(0xFFB39DDB)
+// Light theme variants
+val LightGlassBackgroundStart = Color(0xFFF5F7FA)  // Very light grayish blue
+val LightGlassBackgroundMid = Color(0xFFFFFFFF)     // Pure white
+val LightGlassBackgroundEnd = Color(0xFFEEF2F7)    // Light blue-gray
 
-val LightGlassSurfaceLight = Color.Black.copy(alpha = 0.05f)
-val LightGlassSurfaceMedium = Color.Black.copy(alpha = 0.1f)
-val LightGlassSurfaceHeavy = Color.Black.copy(alpha = 0.15f)
+val LightGlassSurfaceLight = Color.Black.copy(alpha = 0.03f)
+val LightGlassSurfaceMedium = Color.Black.copy(alpha = 0.05f)
+val LightGlassSurfaceHeavy = Color.Black.copy(alpha = 0.08f)
 
 val LightGlassTextPrimary = Color(0xFF1A1A1A)
 val LightGlassTextSecondary = Color(0xFF666666)
 val LightGlassTextTertiary = Color(0xFF999999)
+val LightGlassTextDisabled = Color(0xFFCCCCCC)
+
+// Light theme borders
+val LightGlassBorderLight = Color.Black.copy(alpha = 0.08f)
+val LightGlassBorderMedium = Color.Black.copy(alpha = 0.12f)
+val LightGlassBorderHeavy = Color.Black.copy(alpha = 0.2f)

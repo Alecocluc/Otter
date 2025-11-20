@@ -23,10 +23,10 @@ import com.appharbor.otter.ui.theme.OtterTheme
 
 /**
  * Components Preview Screen
- * 
+ *
  * A comprehensive showcase of all glassmorphism components available in the app.
  * This screen serves as both a visual reference and a testing ground for components.
- * 
+ *
  * Use this screen during development to:
  * - Preview all components in one place
  * - Test interactions and animations
@@ -42,7 +42,7 @@ fun ComponentsPreview() {
     var checkboxStates by remember { mutableStateOf(listOf(true, false, true, false)) }
     var selectedRadio by remember { mutableStateOf(0) }
     var selectedSegment by remember { mutableStateOf(0) }
-    
+
     GlassBackground {
         LazyColumn(
             modifier = Modifier
@@ -72,7 +72,7 @@ fun ComponentsPreview() {
                     )
                 }
             }
-            
+
             // Cards Section
             item {
                 ComponentSection(title = "Cards") {
@@ -96,7 +96,7 @@ fun ComponentsPreview() {
                                 )
                             }
                         }
-                        
+
                         GlassCardCompact(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -115,7 +115,7 @@ fun ComponentsPreview() {
                                 )
                             }
                         }
-                        
+
                         GlassCardShimmer(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -124,7 +124,7 @@ fun ComponentsPreview() {
                     }
                 }
             }
-            
+
             // Buttons Section
             item {
                 ComponentSection(title = "Buttons") {
@@ -134,41 +134,34 @@ fun ComponentsPreview() {
                             onClick = { },
                             modifier = Modifier.fillMaxWidth()
                         )
-                        
+
                         GlassButton(
                             text = "Disabled Button",
                             onClick = { },
                             modifier = Modifier.fillMaxWidth(),
                             enabled = false
                         )
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             GlassIconButton(
-                                onClick = { }
-                            ) {
+                                onClick = { }) {
                                 Text(
-                                    text = "♥",
-                                    color = Color.White,
-                                    fontSize = 20.sp
+                                    text = "♥", color = Color.White, fontSize = 20.sp
                                 )
                             }
-                            
+
                             GlassIconButton(
-                                onClick = { }
-                            ) {
+                                onClick = { }) {
                                 Text(
-                                    text = "★",
-                                    color = Color.White,
-                                    fontSize = 20.sp
+                                    text = "★", color = Color.White, fontSize = 20.sp
                                 )
                             }
-                            
+
                             GlassFAB(
-                                onClick = { }
-                            ) {
+                                onClick = { }) {
                                 Text(
                                     text = "+",
                                     color = Color.White,
@@ -179,19 +172,16 @@ fun ComponentsPreview() {
                         }
 
                         GlassExtendedFAB(
-                            text = "New Download",
-                            onClick = { },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Default.Download,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            },
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            text = "New Download", onClick = { }, icon = {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }, modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
-                        
+
                         GlassSegmentedButton(
                             options = listOf("Video", "Audio", "Both"),
                             selectedIndex = selectedSegment,
@@ -201,7 +191,7 @@ fun ComponentsPreview() {
                     }
                 }
             }
-            
+
             // Input Fields Section
             item {
                 ComponentSection(title = "Input Fields") {
@@ -213,7 +203,7 @@ fun ComponentsPreview() {
                             label = "Video URL",
                             modifier = Modifier.fillMaxWidth()
                         )
-                        
+
                         GlassSearchInput(
                             value = searchValue,
                             onValueChange = { searchValue = it },
@@ -221,7 +211,7 @@ fun ComponentsPreview() {
                             placeholder = "Search downloads...",
                             modifier = Modifier.fillMaxWidth()
                         )
-                        
+
                         GlassTextArea(
                             value = textAreaValue,
                             onValueChange = { textAreaValue = it },
@@ -233,7 +223,7 @@ fun ComponentsPreview() {
                     }
                 }
             }
-            
+
             // Toggles Section
             item {
                 ComponentSection(title = "Toggles") {
@@ -243,27 +233,23 @@ fun ComponentsPreview() {
                                 label = "Auto-download",
                                 description = "Start downloads automatically",
                                 checked = toggleStates[0]
-                            ),
-                            ToggleItem(
+                            ), ToggleItem(
                                 label = "High Quality",
                                 description = "Download highest available quality",
                                 checked = toggleStates[1]
-                            ),
-                            ToggleItem(
+                            ), ToggleItem(
                                 label = "Notifications",
                                 description = "Show download progress notifications",
                                 checked = toggleStates[2]
                             )
-                        ),
-                        onItemToggled = { index, checked ->
+                        ), onItemToggled = { index, checked ->
                             toggleStates = toggleStates.toMutableList().apply {
                                 this[index] = checked
                             }
-                        }
-                    )
+                        })
                 }
             }
-            
+
             // Checkboxes Section
             item {
                 ComponentSection(title = "Checkboxes") {
@@ -274,25 +260,22 @@ fun ComponentsPreview() {
                                 CheckboxItem("Download audio", checkboxStates[1]),
                                 CheckboxItem("Download subtitles", checkboxStates[2]),
                                 CheckboxItem("Download thumbnail", checkboxStates[3])
-                            ),
-                            onItemCheckedChange = { index, checked ->
+                            ), onItemCheckedChange = { index, checked ->
                                 checkboxStates = checkboxStates.toMutableList().apply {
                                     this[index] = checked
                                 }
-                            }
-                        )
+                            })
                     }
                 }
             }
-            
+
             // Radio Buttons Section
             item {
                 ComponentSection(title = "Radio Buttons") {
                     GlassRadioGroup(
                         items = listOf("Best Quality", "1080p", "720p", "Audio Only"),
                         selectedIndex = selectedRadio,
-                        onItemSelected = { selectedRadio = it }
-                    )
+                        onItemSelected = { selectedRadio = it })
                 }
             }
 
@@ -300,7 +283,7 @@ fun ComponentsPreview() {
             item {
                 ComponentSection(title = "Navigation") {
                     var selectedNav by remember { mutableStateOf(0) }
-                    
+
                     GlassNavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -331,17 +314,16 @@ fun ComponentsPreview() {
                 ComponentSection(title = "Feedback") {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         GlassSnackbarContent(
-                            message = "Download started successfully",
-                            actionLabel = "View"
+                            message = "Download started successfully", actionLabel = "View"
                         )
-                        
+
                         GlassSnackbarContent(
                             message = "Connection lost. Retrying...",
                         )
                     }
                 }
             }
-            
+
             // Dividers Section
             item {
                 ComponentSection(title = "Dividers & Spacers") {
@@ -351,22 +333,22 @@ fun ComponentsPreview() {
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 14.sp
                         )
-                        
+
                         GlassSpacer(height = 24.dp, showDivider = true)
-                        
+
                         Text(
                             text = "Content Below",
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 14.sp
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         GlassDivider()
                     }
                 }
             }
-            
+
             // Footer Spacer
             item {
                 Spacer(modifier = Modifier.height(32.dp))
@@ -377,28 +359,23 @@ fun ComponentsPreview() {
 
 /**
  * Component Section Container
- * 
+ *
  * A reusable container for grouping related components in the preview.
- * 
+ *
  * @param title Section title
  * @param content Section content
  */
 @Composable
 private fun ComponentSection(
-    title: String,
-    content: @Composable () -> Unit
+    title: String, content: @Composable () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = title,
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold
+            text = title, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.SemiBold
         )
-        
+
         GlassCard(
             modifier = Modifier.fillMaxWidth()
         ) {

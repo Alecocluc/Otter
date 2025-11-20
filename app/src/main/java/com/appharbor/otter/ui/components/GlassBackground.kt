@@ -21,19 +21,30 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GlassBackground(
     modifier: Modifier = Modifier,
-    colors: List<Color> = listOf(
-        Color(0xFF0A0E27),
-        Color(0xFF1A1F3A),
-        Color(0xFF2D1B3D)
-    ),
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
+    colors: List<Color>? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val gradientColors = colors ?: if (darkTheme) {
+        listOf(
+            Color(0xFF0A0E27),
+            Color(0xFF1A1F3A),
+            Color(0xFF2D1B3D)
+        )
+    } else {
+        listOf(
+            Color(0xFFF5F7FA),
+            Color(0xFFFFFFFF),
+            Color(0xFFEEF2F7)
+        )
+    }
+    
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = colors
+                    colors = gradientColors
                 )
             )
     ) {

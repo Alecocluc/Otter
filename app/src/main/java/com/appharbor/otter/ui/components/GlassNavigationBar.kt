@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun GlassNavigationBar(
     modifier: Modifier = Modifier,
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
     content: @Composable RowScope.() -> Unit
 ) {
     Box(
@@ -54,10 +55,17 @@ fun GlassNavigationBar(
                 .matchParentSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF1A1F3A).copy(alpha = 0.8f),
-                            Color(0xFF0A0E27).copy(alpha = 0.9f)
-                        )
+                        colors = if (darkTheme) {
+                            listOf(
+                                Color(0xFF1A1F3A).copy(alpha = 0.8f),
+                                Color(0xFF0A0E27).copy(alpha = 0.9f)
+                            )
+                        } else {
+                            listOf(
+                                Color.White.copy(alpha = 0.9f),
+                                Color(0xFFF5F7FA).copy(alpha = 0.95f)
+                            )
+                        }
                     )
                 )
                 .blur(radius = 20.dp)
@@ -70,10 +78,17 @@ fun GlassNavigationBar(
                 .border(
                     width = 1.dp,
                     brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.2f),
-                            Color.White.copy(alpha = 0.05f)
-                        )
+                        colors = if (darkTheme) {
+                            listOf(
+                                Color.White.copy(alpha = 0.2f),
+                                Color.White.copy(alpha = 0.05f)
+                            )
+                        } else {
+                            listOf(
+                                Color.Black.copy(alpha = 0.1f),
+                                Color.Black.copy(alpha = 0.05f)
+                            )
+                        }
                     ),
                     shape = RoundedCornerShape(36.dp)
                 )
@@ -107,9 +122,16 @@ fun RowScope.GlassNavigationBarItem(
     onClick: () -> Unit,
     icon: ImageVector,
     label: String,
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
     selectedColor: Color = Color(0xFF6C63FF),
-    unselectedColor: Color = Color.White.copy(alpha = 0.5f)
+    unselectedColor: Color? = null
 ) {
+    val itemUnselectedColor = unselectedColor ?: if (darkTheme) {
+        Color.White.copy(alpha = 0.5f)
+    } else {
+        Color.Black.copy(alpha = 0.5f)
+    }
+    
     val haptic = LocalHapticFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     
@@ -163,7 +185,11 @@ fun RowScope.GlassNavigationBarItem(
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = if (selected) Color.White else unselectedColor,
+                tint = if (selected) {
+                    if (darkTheme) Color.White else selectedColor
+                } else {
+                    itemUnselectedColor
+                },
                 modifier = Modifier
                     .size(24.dp)
                     .scale(scale)
@@ -173,7 +199,7 @@ fun RowScope.GlassNavigationBarItem(
         if (selected) {
             Text(
                 text = label,
-                color = Color.White,
+                color = if (darkTheme) Color.White else Color.Black.copy(alpha = 0.8f),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(top = 4.dp)

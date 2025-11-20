@@ -89,8 +89,7 @@ fun GlassSnackbarContent(
     Box(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth()
-            .heightIn(min = 60.dp)
+            .wrapContentHeight()
             .clip(RoundedCornerShape(16.dp))
     ) {
         // Background with blur
@@ -127,8 +126,8 @@ fun GlassSnackbarContent(
         // Content
         Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .wrapContentHeight()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(

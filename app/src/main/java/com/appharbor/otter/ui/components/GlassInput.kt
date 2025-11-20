@@ -3,6 +3,9 @@ package com.appharbor.otter.ui.components
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -68,10 +71,35 @@ fun GlassInput(
     imeAction: ImeAction = ImeAction.Done,
     onImeAction: (() -> Unit)? = null,
     cornerRadius: Dp = 20.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.1f),
-    textColor: Color = Color.White,
-    placeholderColor: Color = Color.White.copy(alpha = 0.5f)
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
+    textColor: Color? = null,
+    placeholderColor: Color? = null
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        Color.White.copy(alpha = 0.1f)
+    } else {
+        Color.Black.copy(alpha = 0.05f)
+    }
+    
+    val effectiveTextColor = textColor ?: if (darkTheme) {
+        Color.White
+    } else {
+        Color.Black.copy(alpha = 0.9f)
+    }
+    
+    val effectivePlaceholderColor = placeholderColor ?: if (darkTheme) {
+        Color.White.copy(alpha = 0.5f)
+    } else {
+        Color.Black.copy(alpha = 0.4f)
+    }
+    
+    val borderColor = if (darkTheme) {
+        Color.White
+    } else {
+        Color.Black
+    }
+    
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     
@@ -86,7 +114,7 @@ fun GlassInput(
         label?.let {
             Text(
                 text = it,
-                color = textColor.copy(alpha = 0.7f),
+                color = effectiveTextColor.copy(alpha = 0.7f),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
@@ -102,14 +130,14 @@ fun GlassInput(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            backgroundColor.copy(alpha = backgroundColor.alpha * 1.2f),
-                            backgroundColor
+                            effectiveBackgroundColor.copy(alpha = effectiveBackgroundColor.alpha * 1.2f),
+                            effectiveBackgroundColor
                         )
                     )
                 )
                 .border(
                     width = 1.dp,
-                    color = Color.White.copy(alpha = borderAlpha),
+                    color = borderColor.copy(alpha = borderAlpha),
                     shape = RoundedCornerShape(cornerRadius)
                 )
                 .padding(horizontal = 16.dp),
@@ -135,7 +163,7 @@ fun GlassInput(
                         enabled = enabled,
                         readOnly = readOnly,
                         textStyle = TextStyle(
-                            color = textColor,
+                            color = effectiveTextColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         ),
@@ -155,7 +183,7 @@ fun GlassInput(
                         } else {
                             VisualTransformation.None
                         },
-                        cursorBrush = SolidColor(textColor),
+                        cursorBrush = SolidColor(effectiveTextColor),
                         interactionSource = interactionSource
                     )
                     
@@ -163,7 +191,7 @@ fun GlassInput(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = placeholderColor,
+                            color = effectivePlaceholderColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         )
@@ -288,6 +316,8 @@ fun GlassTextArea(
     }
 }
 
+
+
 /**
  * Glass Search Input
  * 
@@ -305,13 +335,27 @@ fun GlassSearchInput(
     onValueChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "Search..."
+    placeholder: String = "Search...",
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme()
 ) {
     GlassInput(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
         placeholder = placeholder,
+        darkTheme = darkTheme,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = if (darkTheme) {
+                    Color.White.copy(alpha = 0.7f)
+                } else {
+                    Color.Black.copy(alpha = 0.6f)
+                },
+                modifier = Modifier.size(20.dp)
+            )
+        },
         keyboardType = KeyboardType.Text,
         imeAction = ImeAction.Search,
         onImeAction = onSearch,

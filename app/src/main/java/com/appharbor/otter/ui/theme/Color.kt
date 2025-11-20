@@ -2,15 +2,6 @@ package com.appharbor.otter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Legacy Material 3 colors (kept for compatibility)
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
 // Glassmorphism Theme Colors
 // Dark theme - deep, rich backgrounds with premium feel
 val GlassBackgroundStart = Color(0xFF0A0E27)      // Deep navy blue

@@ -40,9 +40,22 @@ class YtDlpBridge {
                     try {
                         val status = data["status"]?.toString()
                         if (status == "downloading") {
-                            val downloaded = data["downloaded_bytes"]?.toString()?.toLongOrNull() ?: 0L
-                            val total = data["total_bytes"]?.toString()?.toLongOrNull() ?: 1L
-                            val progress = if (total > 0) downloaded.toFloat() / total.toFloat() else 0f
+                            // Parse bytes as Double first to handle potential float strings from Python, then convert to Long
+                            val downloaded = data["downloaded_bytes"]?.toString()?.toDoubleOrNull()?.toLong() ?: 0L
+                            val total = data["total_bytes"]?.toString()?.toDoubleOrNull()?.toLong() ?: 0L
+                            
+                            // Try to get pre-calculated percentage from yt-dlp
+                            val percentStr = data["percent"]?.toString()?.trim()
+                            val percentVal = percentStr?.toFloatOrNull()
+                            
+                            val progress = if (percentVal != null) {
+                                percentVal / 100f
+                            } else if (total > 0) {
+                                downloaded.toFloat() / total.toFloat()
+                            } else {
+                                0f
+                            }
+                            
                             val speed = data["speed"]?.toString() ?: "0"
                             onProgress(progress, speed)
                         }

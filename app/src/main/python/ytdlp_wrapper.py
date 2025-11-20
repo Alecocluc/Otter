@@ -50,7 +50,20 @@ def download_video(url, output_path, format_id=None, progress_callback=None):
                 status_data = HashMap()
                 status_data.put('status', str(d.get('status', '')))
                 status_data.put('downloaded_bytes', str(d.get('downloaded_bytes', 0)))
-                status_data.put('total_bytes', str(d.get('total_bytes') or d.get('total_bytes_estimate', 0)))
+                # Ensure we have a valid total bytes value
+                total = d.get('total_bytes')
+                if total is None:
+                    total = d.get('total_bytes_estimate')
+                if total is None:
+                    total = 0
+                
+                status_data.put('total_bytes', str(total))
+                
+                # Try to get percentage directly from yt-dlp
+                # This is often more accurate for HLS streams or when total size is estimated
+                percent = d.get('_percent_str', '').replace('%','')
+                status_data.put('percent', str(percent))
+                
                 status_data.put('speed', str(d.get('speed', 0)))
                 status_data.put('eta', str(d.get('eta', 0)))
                 status_data.put('filename', str(d.get('filename', '')))

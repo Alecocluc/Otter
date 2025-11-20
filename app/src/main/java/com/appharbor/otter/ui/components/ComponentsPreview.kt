@@ -3,6 +3,11 @@ package com.appharbor.otter.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -13,6 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import com.appharbor.otter.ui.theme.OtterTheme
 
 /**
  * Components Preview Screen
@@ -170,6 +177,20 @@ fun ComponentsPreview() {
                                 )
                             }
                         }
+
+                        GlassExtendedFAB(
+                            text = "New Download",
+                            onClick = { },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
                         
                         GlassSegmentedButton(
                             options = listOf("Video", "Audio", "Both"),
@@ -274,6 +295,52 @@ fun ComponentsPreview() {
                     )
                 }
             }
+
+            // Navigation Section
+            item {
+                ComponentSection(title = "Navigation") {
+                    var selectedNav by remember { mutableStateOf(0) }
+                    
+                    GlassNavigationBar(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        GlassNavigationBarItem(
+                            selected = selectedNav == 0,
+                            onClick = { selectedNav = 0 },
+                            icon = Icons.Default.Home,
+                            label = "Home"
+                        )
+                        GlassNavigationBarItem(
+                            selected = selectedNav == 1,
+                            onClick = { selectedNav = 1 },
+                            icon = Icons.Default.Search,
+                            label = "Search"
+                        )
+                        GlassNavigationBarItem(
+                            selected = selectedNav == 2,
+                            onClick = { selectedNav = 2 },
+                            icon = Icons.Default.Settings,
+                            label = "Settings"
+                        )
+                    }
+                }
+            }
+
+            // Feedback Section
+            item {
+                ComponentSection(title = "Feedback") {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        GlassSnackbarContent(
+                            message = "Download started successfully",
+                            actionLabel = "View"
+                        )
+                        
+                        GlassSnackbarContent(
+                            message = "Connection lost. Retrying...",
+                        )
+                    }
+                }
+            }
             
             // Dividers Section
             item {
@@ -343,5 +410,13 @@ private fun ComponentSection(
                 content()
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewComponents() {
+    OtterTheme {
+        ComponentsPreview()
     }
 }

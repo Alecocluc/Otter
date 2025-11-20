@@ -215,6 +215,35 @@ fun GlassFAB(
 }
 
 /**
+ * Glass Extended Floating Action Button
+ * 
+ * A wide FAB with text and icon.
+ * 
+ * @param text Text to display
+ * @param onClick Callback when FAB is clicked
+ * @param modifier Modifier for the FAB
+ * @param backgroundColor Background color with transparency
+ * @param icon Optional icon composable
+ */
+@Composable
+fun GlassExtendedFAB(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.White.copy(alpha = 0.2f),
+    icon: (@Composable () -> Unit)? = null
+) {
+    GlassButton(
+        text = text,
+        onClick = onClick,
+        modifier = modifier.height(56.dp),
+        cornerRadius = 28.dp,
+        backgroundColor = backgroundColor,
+        icon = icon
+    )
+}
+
+/**
  * Glass Segmented Button
  * 
  * A segmented control with multiple options, glassmorphism style.

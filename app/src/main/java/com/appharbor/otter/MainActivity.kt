@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.appharbor.otter.ui.components.ComponentsPreview
+import com.appharbor.otter.ui.screens.MainScreen
 import com.appharbor.otter.ui.theme.OtterTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,8 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             OtterTheme {
-                // Show the glassmorphism components preview
-                ComponentsPreview()
+                // Show the main screen with navigation
+                MainScreen()
             }
         }
     }
@@ -39,6 +39,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     OtterTheme {
-        ComponentsPreview()
+        MainScreen()
     }
 }

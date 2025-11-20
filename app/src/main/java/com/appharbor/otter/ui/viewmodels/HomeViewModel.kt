@@ -1,5 +1,6 @@
 package com.appharbor.otter.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appharbor.otter.data.models.VideoInfo
@@ -53,8 +54,10 @@ class HomeViewModel : ViewModel() {
             
             if (info.error != null) {
                 _error.value = info.error
+                Log.e("HomeViewModel", "Search error: ${info.error}")
             } else {
                 _videoInfo.value = info
+                Log.d("HomeViewModel", "Video info retrieved: ${info.title}")
             }
             
             _isLoading.value = false
@@ -63,24 +66,48 @@ class HomeViewModel : ViewModel() {
     
     fun downloadVideo(url: String, outputPath: String, formatId: String? = null) {
         viewModelScope.launch {
-            _isLoading.value = true
-            _downloadStatus.value = "Starting download..."
-            _downloadProgress.value = 0f
-            _snackbarEvent.emit("Download started")
-            
-            val success = ytDlpBridge.downloadVideo(url, outputPath, formatId) { progress, speed ->
-                _downloadProgress.value = progress
-                _downloadStatus.value = "Downloading: ${(progress * 100).toInt()}% ($speed)"
+            try {
+                _isLoading.value = true
+                _downloadStatus.value = "Preparing download…"
+                _downloadProgress.value = 0f
+                
+                Log.d("HomeViewModel", "Download initiated: url=$url, path=$outputPath, format=$formatId")
+                
+                val result = ytDlpBridge.downloadVideo(url, outputPath, formatId) { progress, speed ->
+                    // Progress is already 0-1, no need to multiply by 100
+                    _downloadProgress.value = progress
+                    val speedFormatted = try {
+                        val speedBytes = speed.toDoubleOrNull() ?: 0.0
+                        if (speedBytes > 1024 * 1024) {
+                            "%.2f MB/s".format(speedBytes / (1024 * 1024))
+                        } else if (speedBytes > 1024) {
+                            "%.2f KB/s".format(speedBytes / 1024)
+                        } else {
+                            "$speedBytes B/s"
+                        }
+                    } catch (e: Exception) {
+                        speed
+                    }
+                    _downloadStatus.value = "Downloading: ${(progress * 100).toInt()}% ($speedFormatted)"
+                }
+                
+                result.onSuccess { path ->
+                    _downloadStatus.value = "Download completed!"
+                    _snackbarEvent.emit("Download completed: $path")
+                    Log.d("HomeViewModel", "Download successful: $path")
+                }.onFailure { error ->
+                    val errorMsg = error.message ?: "Unknown error"
+                    _downloadStatus.value = "Download failed: $errorMsg"
+                    _snackbarEvent.emit("Download failed: $errorMsg")
+                    Log.e("HomeViewModel", "Download failed", error)
+                }
+            } catch (e: Exception) {
+                _downloadStatus.value = "Download failed: ${e.message}"
+                _snackbarEvent.emit("Download failed: ${e.message}")
+                Log.e("HomeViewModel", "Download exception", e)
+            } finally {
+                _isLoading.value = false
             }
-            
-            if (success) {
-                _downloadStatus.value = "Download completed!"
-                _snackbarEvent.emit("Download completed successfully")
-            } else {
-                _downloadStatus.value = "Download failed."
-                _snackbarEvent.emit("Download failed")
-            }
-            _isLoading.value = false
         }
     }
     

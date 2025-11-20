@@ -71,6 +71,114 @@ fun GlassSnackbar(
 }
 
 /**
+ * Glass Progress Snackbar
+ * 
+ * A snackbar with a progress bar at the bottom.
+ * Perfect for showing download or upload progress.
+ * 
+ * @param message The message to display
+ * @param progress Progress value between 0f and 1f
+ */
+@Composable
+fun GlassProgressSnackbar(
+    message: String,
+    progress: Float
+) {
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(16.dp))
+    ) {
+        // Background with blur
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1A1F3A).copy(alpha = 0.85f),
+                            Color(0xFF0A0E27).copy(alpha = 0.95f)
+                        )
+                    )
+                )
+                .blur(radius = 10.dp)
+        )
+        
+        // Border
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .border(
+                    width = 1.dp,
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.2f),
+                            Color.White.copy(alpha = 0.05f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
+        )
+        
+        // Content
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = message,
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 2
+                )
+                
+                Spacer(modifier = Modifier.width(12.dp))
+                
+                Text(
+                    text = "${(progress * 100).toInt()}%",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Progress bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(Color.White.copy(alpha = 0.2f))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(progress.coerceIn(0f, 1f))
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color(0xFF00D9FF),
+                                    Color(0xFF0066FF)
+                                )
+                            )
+                        )
+                )
+            }
+        }
+    }
+}
+
+/**
  * Glass Snackbar Content
  * 
  * The visual content of the GlassSnackbar.

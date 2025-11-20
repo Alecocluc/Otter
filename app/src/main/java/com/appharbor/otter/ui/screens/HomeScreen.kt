@@ -7,11 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.appharbor.otter.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appharbor.otter.ui.components.GlassSearchInput
 import com.appharbor.otter.ui.components.GlassButton
 import com.appharbor.otter.ui.components.GlassSnackbarHost
+import com.appharbor.otter.ui.components.GlassProgressSnackbar
 import com.appharbor.otter.ui.components.GlassBottomSheetContent
 import com.appharbor.otter.ui.viewmodels.HomeViewModel
 import com.appharbor.otter.data.models.VideoInfo
@@ -48,7 +51,15 @@ fun HomeScreen(
                     .padding(bottom = 80.dp),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                GlassSnackbarHost(hostState = snackbarHostState)
+                // Show progress snackbar when downloading (any status except empty or completed)
+                if (downloadStatus.isNotEmpty() && !downloadStatus.startsWith("Download completed")) {
+                    GlassProgressSnackbar(
+                        message = downloadStatus,
+                        progress = downloadProgress
+                    )
+                } else {
+                    GlassSnackbarHost(hostState = snackbarHostState)
+                }
             }
         },
         containerColor = Color.Transparent,
@@ -75,18 +86,9 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                if (isLoading) {
+                if (isLoading && downloadStatus.isEmpty()) {
                     Spacer(modifier = Modifier.height(32.dp))
                     CircularProgressIndicator(color = Color.White)
-                    if (downloadStatus.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = downloadStatus, color = Color.White)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LinearProgressIndicator(
-                            progress = { downloadProgress },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
                 }
 
                 error?.let {
@@ -105,9 +107,23 @@ fun HomeScreen(
                     GlassBottomSheetContent {
                         VideoDownloadSheetContent(
                             videoInfo = videoInfo!!, onDownload = { formatId ->
-                                val filename = "${videoInfo!!.title?.take(50) ?: "video"}.mp4"
-                                val downloadDir =
-                                    context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+                                // Clean filename by removing invalid characters
+                                val cleanTitle = videoInfo!!.title
+                                    ?.replace(Regex("[\\\\/:*?\"<>|]"), "")
+                                    ?.take(50) ?: "video"
+                                val filename = "$cleanTitle.mp4"
+                                
+                                // Use public Downloads folder with Otter subfolder
+                                val downloadDir = File(
+                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                    "Otter"
+                                )
+                                
+                                // Create directory if it doesn't exist
+                                if (!downloadDir.exists()) {
+                                    downloadDir.mkdirs()
+                                }
+                                
                                 val path = File(downloadDir, filename).absolutePath
                                 viewModel.downloadVideo(searchQuery, path, formatId)
                                 viewModel.clearVideoInfo()
@@ -127,21 +143,25 @@ fun VideoDownloadSheetContent(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = videoInfo.title ?: "Unknown Title",
+            text = videoInfo.title ?: stringResource(R.string.unknown_title),
             style = MaterialTheme.typography.titleLarge,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Duration: ${videoInfo.duration ?: 0}s", color = Color.Gray
+            text = stringResource(R.string.duration_format, videoInfo.duration ?: 0),
+            color = Color.Gray
         )
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(text = "Formats available: ${videoInfo.formats.size}", color = Color.White)
+        Text(
+            text = stringResource(R.string.formats_available, videoInfo.formats.size),
+            color = Color.White
+        )
         Spacer(modifier = Modifier.height(24.dp))
 
         GlassButton(
-            text = "Download Best Quality",
+            text = stringResource(R.string.download_best_quality),
             onClick = { onDownload("best") },
             modifier = Modifier.fillMaxWidth()
         )

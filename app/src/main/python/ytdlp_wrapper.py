@@ -42,33 +42,53 @@ def download_video(url, output_path, format_id=None, progress_callback=None):
     
     def progress_hook(d):
         if progress_callback:
-            # Convert dictionary to a simple dict for Java/Kotlin
-            status_data = {
-                'status': d.get('status'),
-                'downloaded_bytes': str(d.get('downloaded_bytes', 0)),
-                'total_bytes': str(d.get('total_bytes') or d.get('total_bytes_estimate', 0)),
-                'speed': str(d.get('speed', 0)),
-                'eta': str(d.get('eta', 0)),
-                'filename': d.get('filename', '')
-            }
-            # Call the onProgress method of the Java interface
+            # Import java.util.HashMap to create a proper Java Map
             try:
+                from java.util import HashMap
+                
+                # Create a Java HashMap that can be passed to Kotlin
+                status_data = HashMap()
+                status_data.put('status', str(d.get('status', '')))
+                status_data.put('downloaded_bytes', str(d.get('downloaded_bytes', 0)))
+                status_data.put('total_bytes', str(d.get('total_bytes') or d.get('total_bytes_estimate', 0)))
+                status_data.put('speed', str(d.get('speed', 0)))
+                status_data.put('eta', str(d.get('eta', 0)))
+                status_data.put('filename', str(d.get('filename', '')))
+                
+                # Call the onProgress method of the Java interface
                 progress_callback.onProgress(status_data)
-            except AttributeError:
-                # Fallback if it's a callable
-                progress_callback(status_data)
+            except Exception as e:
+                # Silently fail on callback error to not interrupt download
+                pass
 
+    # Select format that doesn't require merging (pre-merged mp4)
+    # This avoids FFmpeg dependency
+    format_selector = format_id if format_id and format_id != 'best' else 'best[ext=mp4]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best'
+    
     ydl_opts = {
-        'format': format_id or 'best',
+        'format': format_selector,
         'outtmpl': output_path,
         'progress_hooks': [progress_hook],
-        'quiet': True,
-        'no_warnings': True,
+        'quiet': False,  # Enable output for debugging
+        'no_warnings': False,
+        'ignoreerrors': False,
+        'nocheckcertificate': True,  # Avoid SSL issues
+        # Don't use FFmpeg for now - just download single file formats
+        'prefer_ffmpeg': False,
     }
     
     try:
+        print(f"Starting download: {url} to {output_path}")
+        print(f"Format: {format_selector}")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        return json.dumps({'status': 'success'})
+            error_code = ydl.download([url])
+            if error_code != 0:
+                return json.dumps({'status': 'error', 'message': f'yt-dlp returned error code {error_code}'})
+        print(f"Download completed successfully: {output_path}")
+        return json.dumps({'status': 'success', 'path': output_path})
     except Exception as e:
-        return json.dumps({'status': 'error', 'message': str(e)})
+        error_msg = str(e)
+        print(f"Download error: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return json.dumps({'status': 'error', 'message': error_msg})

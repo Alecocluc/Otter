@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.appharbor.otter.R
 import com.appharbor.otter.ui.components.GlassBackground
 import com.appharbor.otter.ui.components.GlassNavigationBar
 import com.appharbor.otter.ui.components.GlassNavigationBarItem
@@ -32,19 +34,19 @@ fun MainScreen() {
                         selected = selectedNav == 0,
                         onClick = { selectedNav = 0 },
                         icon = Icons.Default.Home,
-                        label = "Home"
+                        label = stringResource(R.string.nav_home)
                     )
                     GlassNavigationBarItem(
                         selected = selectedNav == 1,
                         onClick = { selectedNav = 1 },
                         icon = Icons.Default.Download,
-                        label = "Downloads"
+                        label = stringResource(R.string.nav_downloads)
                     )
                     GlassNavigationBarItem(
                         selected = selectedNav == 2,
                         onClick = { selectedNav = 2 },
                         icon = Icons.Default.Settings,
-                        label = "Settings"
+                        label = stringResource(R.string.nav_settings)
                     )
                 }
             }

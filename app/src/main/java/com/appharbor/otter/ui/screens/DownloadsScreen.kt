@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
+import com.appharbor.otter.R
 import com.appharbor.otter.ui.components.GlassCard
 
 @Composable
@@ -16,6 +18,10 @@ fun DownloadsScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "My Downloads", color = Color.White, fontSize = 24.sp)
+        Text(
+            text = stringResource(R.string.downloads_title),
+            color = Color.White,
+            fontSize = 24.sp
+        )
     }
 }

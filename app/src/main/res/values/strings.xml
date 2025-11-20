@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Otter</string>
+    
+    <!-- Home Screen -->
+    <string name="unknown_title">Unknown Title</string>
+    <string name="duration_format">Duration: %ss</string>
+    <string name="formats_available">Formats available: %d</string>
+    <string name="download_best_quality">Download Best Quality</string>
+    
+    <!-- Download States -->
+    <string name="preparing_download">Preparing download…</string>
+    <string name="downloading_progress">Downloading: %d%% (%s)</string>
+    <string name="download_completed">Download completed!</string>
+    <string name="download_failed">Download failed: %s</string>
+    <string name="download_completed_path">Download completed: %s</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_settings">Settings</string>
+    
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="coming_soon">Coming Soon</string>
+    
+    <!-- Downloads Screen -->
+    <string name="downloads_title">Downloads</string>
+    <string name="no_downloads">No downloads yet</string>
 </resources>

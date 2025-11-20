@@ -1,19 +1,21 @@
 package com.appharbor.otter.ui.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.SnackbarData
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -70,6 +72,7 @@ fun GlassSnackbar(
     )
 }
 
+
 /**
  * Glass Progress Snackbar
  * 
@@ -84,6 +87,11 @@ fun GlassProgressSnackbar(
     message: String,
     progress: Float
 ) {
+    val animatedProgress = animateFloatAsState(
+        targetValue = progress,
+        label = "ProgressAnimation"
+    )
+
     Box(
         modifier = Modifier
             .padding(16.dp)
@@ -161,7 +169,7 @@ fun GlassProgressSnackbar(
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(progress.coerceIn(0f, 1f))
+                        .fillMaxWidth(animatedProgress.value.coerceIn(0f, 1f))
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(2.dp))
                         .background(

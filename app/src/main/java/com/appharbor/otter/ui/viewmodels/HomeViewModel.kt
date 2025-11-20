@@ -73,22 +73,31 @@ class HomeViewModel : ViewModel() {
                 
                 Log.d("HomeViewModel", "Download initiated: url=$url, path=$outputPath, format=$formatId")
                 
+                var lastUpdateTime = 0L
+                
                 val result = ytDlpBridge.downloadVideo(url, outputPath, formatId) { progress, speed ->
-                    // Progress is already 0-1, no need to multiply by 100
-                    _downloadProgress.value = progress
-                    val speedFormatted = try {
-                        val speedBytes = speed.toDoubleOrNull() ?: 0.0
-                        if (speedBytes > 1024 * 1024) {
-                            "%.2f MB/s".format(speedBytes / (1024 * 1024))
-                        } else if (speedBytes > 1024) {
-                            "%.2f KB/s".format(speedBytes / 1024)
-                        } else {
-                            "$speedBytes B/s"
+                    val currentTime = System.currentTimeMillis()
+                    // Throttle updates to every 200ms (5fps) to prevent UI jitter
+                    // Always update if progress is 0 (start) or 1 (finish)
+                    if (currentTime - lastUpdateTime >= 200 || progress >= 1f || progress <= 0f) {
+                        lastUpdateTime = currentTime
+
+                        // Progress is already 0-1, no need to multiply by 100
+                        _downloadProgress.value = progress
+                        val speedFormatted = try {
+                            val speedBytes = speed.toDoubleOrNull() ?: 0.0
+                            if (speedBytes > 1024 * 1024) {
+                                "%.2f MB/s".format(speedBytes / (1024 * 1024))
+                            } else if (speedBytes > 1024) {
+                                "%.2f KB/s".format(speedBytes / 1024)
+                            } else {
+                                "$speedBytes B/s"
+                            }
+                        } catch (e: Exception) {
+                            speed
                         }
-                    } catch (e: Exception) {
-                        speed
+                        _downloadStatus.value = "Downloading: ${(progress * 100).toInt()}% ($speedFormatted)"
                     }
-                    _downloadStatus.value = "Downloading: ${(progress * 100).toInt()}% ($speedFormatted)"
                 }
                 
                 result.onSuccess { path ->

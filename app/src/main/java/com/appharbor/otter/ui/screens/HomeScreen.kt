@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +16,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.RoundedCornerShape
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.appharbor.otter.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.appharbor.otter.ui.components.GlassSearchInput
@@ -44,7 +47,9 @@ fun HomeScreen(
     val downloadProgress by viewModel.downloadProgress.collectAsState()
     val recentDownloads by viewModel.recentDownloads.collectAsState(initial = emptyList())
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
@@ -217,8 +222,12 @@ fun VideoDownloadSheetContent(
     ) {
         // Show thumbnail preview if available
         if (videoInfo.thumbnail != null) {
+            val context = LocalContext.current
             AsyncImage(
-                model = videoInfo.thumbnail,
+                model = ImageRequest.Builder(context)
+                    .data(videoInfo.thumbnail)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = "Video Preview",
                 modifier = Modifier
                     .fillMaxWidth()

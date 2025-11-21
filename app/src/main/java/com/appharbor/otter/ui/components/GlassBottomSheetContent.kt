@@ -54,7 +54,7 @@ fun GlassBottomSheetContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 48.dp),
+                .padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 80.dp),
             content = content
         )
     }

@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Snackbar Host
@@ -85,8 +87,29 @@ fun GlassSnackbar(
 @Composable
 fun GlassProgressSnackbar(
     message: String,
-    progress: Float
+    progress: Float,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val backgroundColor = if (darkTheme) {
+        listOf(
+            GlassBackgroundMid.copy(alpha = 0.5f),
+            GlassBackgroundStart.copy(alpha = 0.6f)
+        )
+    } else {
+        listOf(
+            Color.White.copy(alpha = 0.9f),
+            LightGlassBackgroundStart.copy(alpha = 0.95f)
+        )
+    }
+    
+    val borderColor = if (darkTheme) GlassBorderMedium else LightGlassBorderMedium
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val progressBarBackground = if (darkTheme) {
+        GlassBorderMedium
+    } else {
+        LightGlassBorderHeavy
+    }
+    
     val animatedProgress = animateFloatAsState(
         targetValue = progress,
         label = "ProgressAnimation"
@@ -103,12 +126,7 @@ fun GlassProgressSnackbar(
             modifier = Modifier
                 .matchParentSize()
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF1A1F3A).copy(alpha = 0.85f),
-                            Color(0xFF0A0E27).copy(alpha = 0.95f)
-                        )
-                    )
+                    brush = Brush.verticalGradient(colors = backgroundColor)
                 )
                 .blur(radius = 10.dp)
         )
@@ -119,12 +137,7 @@ fun GlassProgressSnackbar(
                 .matchParentSize()
                 .border(
                     width = 1.dp,
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.2f),
-                            Color.White.copy(alpha = 0.05f)
-                        )
-                    ),
+                    color = borderColor,
                     shape = RoundedCornerShape(16.dp)
                 )
         )
@@ -140,7 +153,7 @@ fun GlassProgressSnackbar(
             ) {
                 Text(
                     text = message,
-                    color = Color.White,
+                    color = textColor,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.weight(1f),
@@ -151,7 +164,7 @@ fun GlassProgressSnackbar(
                 
                 Text(
                     text = "${(progress * 100).toInt()}%",
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = textColor.copy(alpha = 0.8f),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -165,7 +178,7 @@ fun GlassProgressSnackbar(
                     .fillMaxWidth()
                     .height(4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(Color.White.copy(alpha = 0.2f))
+                    .background(progressBarBackground)
             ) {
                 Box(
                     modifier = Modifier
@@ -200,8 +213,29 @@ fun GlassProgressSnackbar(
 fun GlassSnackbarContent(
     message: String,
     actionLabel: String? = null,
-    onAction: () -> Unit = {}
+    onAction: () -> Unit = {},
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val backgroundColor = if (darkTheme) {
+        listOf(
+            GlassBackgroundMid.copy(alpha = 0.5f),
+            GlassBackgroundStart.copy(alpha = 0.6f)
+        )
+    } else {
+        listOf(
+            Color.White.copy(alpha = 0.9f),
+            LightGlassBackgroundStart.copy(alpha = 0.95f)
+        )
+    }
+    
+    val borderColor = if (darkTheme) GlassBorderMedium else LightGlassBorderMedium
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val actionBackground = if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.3f)
+    } else {
+        LightGlassSurfaceMedium
+    }
+    
     Box(
         modifier = Modifier
             .padding(16.dp)
@@ -213,12 +247,7 @@ fun GlassSnackbarContent(
             modifier = Modifier
                 .matchParentSize()
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF1A1F3A).copy(alpha = 0.85f),
-                            Color(0xFF0A0E27).copy(alpha = 0.95f)
-                        )
-                    )
+                    brush = Brush.verticalGradient(colors = backgroundColor)
                 )
                 .blur(radius = 10.dp)
         )
@@ -229,12 +258,7 @@ fun GlassSnackbarContent(
                 .matchParentSize()
                 .border(
                     width = 1.dp,
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.2f),
-                            Color.White.copy(alpha = 0.05f)
-                        )
-                    ),
+                    color = borderColor,
                     shape = RoundedCornerShape(16.dp)
                 )
         )
@@ -248,7 +272,7 @@ fun GlassSnackbarContent(
         ) {
             Text(
                 text = message,
-                color = Color.White,
+                color = textColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.weight(1f),
@@ -260,13 +284,13 @@ fun GlassSnackbarContent(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color.White.copy(alpha = 0.15f))
+                        .background(actionBackground)
                         .clickable { onAction() }
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = label,
-                        color = Color.White,
+                        color = textColor,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )

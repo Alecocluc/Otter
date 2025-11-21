@@ -30,6 +30,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Input Field Component
@@ -77,27 +79,27 @@ fun GlassInput(
     placeholderColor: Color? = null
 ) {
     val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
-        Color.White.copy(alpha = 0.1f)
+        GlassBackgroundMid.copy(alpha = 0.3f)
     } else {
-        Color.Black.copy(alpha = 0.05f)
+        LightGlassSurfaceLight
     }
     
     val effectiveTextColor = textColor ?: if (darkTheme) {
-        Color.White
+        GlassTextPrimary
     } else {
-        Color.Black.copy(alpha = 0.9f)
+        LightGlassTextPrimary
     }
     
     val effectivePlaceholderColor = placeholderColor ?: if (darkTheme) {
-        Color.White.copy(alpha = 0.5f)
+        GlassTextTertiary
     } else {
-        Color.Black.copy(alpha = 0.4f)
+        LightGlassTextTertiary
     }
     
     val borderColor = if (darkTheme) {
-        Color.White
+        GlassBorderMedium
     } else {
-        Color.Black
+        LightGlassBorderMedium
     }
     
     val interactionSource = remember { MutableInteractionSource() }
@@ -240,10 +242,30 @@ fun GlassTextArea(
     minLines: Int = 3,
     maxLines: Int = 6,
     cornerRadius: Dp = 20.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.1f),
-    textColor: Color = Color.White,
-    placeholderColor: Color = Color.White.copy(alpha = 0.5f)
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
+    textColor: Color? = null,
+    placeholderColor: Color? = null
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.3f)
+    } else {
+        LightGlassSurfaceLight
+    }
+    
+    val effectiveTextColor = textColor ?: if (darkTheme) {
+        GlassTextPrimary
+    } else {
+        LightGlassTextPrimary
+    }
+    
+    val effectivePlaceholderColor = placeholderColor ?: if (darkTheme) {
+        GlassTextTertiary
+    } else {
+        LightGlassTextTertiary
+    }
+    
+    val borderColor = if (darkTheme) GlassBorderMedium else LightGlassBorderMedium
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
     
@@ -258,7 +280,7 @@ fun GlassTextArea(
         label?.let {
             Text(
                 text = it,
-                color = textColor.copy(alpha = 0.7f),
+                color = effectiveTextColor.copy(alpha = 0.7f),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(bottom = 8.dp, start = 4.dp)
@@ -274,14 +296,14 @@ fun GlassTextArea(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            backgroundColor.copy(alpha = backgroundColor.alpha * 1.2f),
-                            backgroundColor
+                            effectiveBackgroundColor.copy(alpha = effectiveBackgroundColor.alpha * 1.2f),
+                            effectiveBackgroundColor
                         )
                     )
                 )
                 .border(
                     width = 1.dp,
-                    color = Color.White.copy(alpha = borderAlpha),
+                    color = borderColor.copy(alpha = borderAlpha),
                     shape = RoundedCornerShape(cornerRadius)
                 )
                 .padding(16.dp)
@@ -293,12 +315,12 @@ fun GlassTextArea(
                 enabled = enabled,
                 readOnly = readOnly,
                 textStyle = TextStyle(
-                    color = textColor,
+                    color = effectiveTextColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     lineHeight = 24.sp
                 ),
-                cursorBrush = SolidColor(textColor),
+                cursorBrush = SolidColor(effectiveTextColor),
                 interactionSource = interactionSource
             )
             
@@ -306,7 +328,7 @@ fun GlassTextArea(
             if (value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    color = placeholderColor,
+                    color = effectivePlaceholderColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     lineHeight = 24.sp

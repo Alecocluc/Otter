@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Bottom Sheet Content
@@ -25,19 +27,33 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun GlassBottomSheetContent(
     modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val backgroundColor = if (darkTheme) {
+        listOf(
+            GlassBackgroundMid.copy(alpha = 0.5f),
+            GlassBackgroundStart.copy(alpha = 0.6f)
+        )
+    } else {
+        listOf(
+            Color.White.copy(alpha = 0.9f),
+            LightGlassBackgroundStart.copy(alpha = 0.95f)
+        )
+    }
+    
+    val handleColor = if (darkTheme) {
+        GlassBorderMedium
+    } else {
+        LightGlassBorderHeavy
+    }
+    
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF1A1F3A).copy(alpha = 0.95f),
-                        Color(0xFF0A0E27).copy(alpha = 0.98f)
-                    )
-                )
+                brush = Brush.verticalGradient(colors = backgroundColor)
             )
     ) {
         // Top handle
@@ -48,7 +64,7 @@ fun GlassBottomSheetContent(
                 .width(40.dp)
                 .height(4.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(Color.White.copy(alpha = 0.2f))
+                .background(handleColor)
         )
         
         Column(

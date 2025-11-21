@@ -26,6 +26,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Navigation Bar
@@ -57,13 +59,13 @@ fun GlassNavigationBar(
                     brush = Brush.verticalGradient(
                         colors = if (darkTheme) {
                             listOf(
-                                Color(0xFF1A1F3A).copy(alpha = 0.8f),
-                                Color(0xFF0A0E27).copy(alpha = 0.9f)
+                                GlassBackgroundMid.copy(alpha = 0.4f),
+                                GlassBackgroundStart.copy(alpha = 0.5f)
                             )
                         } else {
                             listOf(
                                 Color.White.copy(alpha = 0.9f),
-                                Color(0xFFF5F7FA).copy(alpha = 0.95f)
+                                LightGlassBackgroundStart.copy(alpha = 0.95f)
                             )
                         }
                     )
@@ -80,13 +82,13 @@ fun GlassNavigationBar(
                     brush = Brush.verticalGradient(
                         colors = if (darkTheme) {
                             listOf(
-                                Color.White.copy(alpha = 0.2f),
-                                Color.White.copy(alpha = 0.05f)
+                                GlassBorderMedium,
+                                GlassBorderLight.copy(alpha = 0.05f)
                             )
                         } else {
                             listOf(
-                                Color.Black.copy(alpha = 0.1f),
-                                Color.Black.copy(alpha = 0.05f)
+                                LightGlassBorderMedium,
+                                LightGlassBorderLight
                             )
                         }
                     ),

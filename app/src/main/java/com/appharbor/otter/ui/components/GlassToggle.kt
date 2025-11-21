@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Toggle Component
@@ -52,11 +54,37 @@ fun GlassToggle(
     thumbSize: Dp = 24.dp,
     trackWidth: Dp = 52.dp,
     trackHeight: Dp = 32.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.15f),
-    checkedBackgroundColor: Color = Color.White.copy(alpha = 0.3f),
-    thumbColor: Color = Color.White,
-    textColor: Color = Color.White
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
+    checkedBackgroundColor: Color? = null,
+    thumbColor: Color? = null,
+    textColor: Color? = null
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.3f)
+    } else {
+        LightGlassSurfaceLight
+    }
+    
+    val effectiveCheckedBackgroundColor = checkedBackgroundColor ?: if (darkTheme) {
+        GlassAccentPrimary.copy(alpha = 0.4f)
+    } else {
+        GlassAccentPrimary.copy(alpha = 0.3f)
+    }
+    
+    val effectiveThumbColor = thumbColor ?: if (darkTheme) {
+        GlassTextPrimary
+    } else {
+        Color.White
+    }
+    
+    val effectiveTextColor = textColor ?: if (darkTheme) {
+        GlassTextPrimary
+    } else {
+        LightGlassTextPrimary
+    }
+    
+    val borderColor = if (darkTheme) GlassBorderMedium else LightGlassBorderMedium
     val haptic = LocalHapticFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     
@@ -72,7 +100,7 @@ fun GlassToggle(
     
     // Background color animation
     val trackColor by animateColorAsState(
-        targetValue = if (checked) checkedBackgroundColor else backgroundColor,
+        targetValue = if (checked) effectiveCheckedBackgroundColor else effectiveBackgroundColor,
         animationSpec = tween(durationMillis = 300),
         label = "track_color"
     )
@@ -105,7 +133,7 @@ fun GlassToggle(
                 )
                 .border(
                     width = 1.dp,
-                    color = Color.White.copy(alpha = 0.2f),
+                    color = borderColor,
                     shape = RoundedCornerShape(trackHeight / 2)
                 )
         ) {
@@ -118,14 +146,14 @@ fun GlassToggle(
                     .background(
                         brush = Brush.radialGradient(
                             colors = listOf(
-                                thumbColor,
-                                thumbColor.copy(alpha = 0.9f)
+                                effectiveThumbColor,
+                                effectiveThumbColor.copy(alpha = 0.9f)
                             )
                         )
                     )
                     .border(
                         width = 1.dp,
-                        color = Color.White.copy(alpha = 0.3f),
+                        color = borderColor.copy(alpha = 0.3f),
                         shape = CircleShape
                     )
             )
@@ -136,7 +164,7 @@ fun GlassToggle(
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = it,
-                color = if (enabled) textColor else textColor.copy(alpha = 0.4f),
+                color = if (enabled) effectiveTextColor else effectiveTextColor.copy(alpha = 0.4f),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
@@ -164,6 +192,7 @@ fun GlassToggleWithIcons(
     modifier: Modifier = Modifier,
     label: String? = null,
     enabled: Boolean = true,
+    darkTheme: Boolean = isSystemInDarkTheme(),
     checkedIcon: @Composable () -> Unit,
     uncheckedIcon: @Composable () -> Unit
 ) {
@@ -185,13 +214,24 @@ fun GlassToggleWithIcons(
     
     val trackColor by animateColorAsState(
         targetValue = if (checked) {
-            Color.White.copy(alpha = 0.3f)
+            if (darkTheme) {
+                GlassAccentPrimary.copy(alpha = 0.4f)
+            } else {
+                GlassAccentPrimary.copy(alpha = 0.3f)
+            }
         } else {
-            Color.White.copy(alpha = 0.15f)
+            if (darkTheme) {
+                GlassBackgroundMid.copy(alpha = 0.3f)
+            } else {
+                LightGlassSurfaceLight
+            }
         },
         animationSpec = tween(durationMillis = 300),
         label = "track_color"
     )
+    
+    val borderColor = if (darkTheme) GlassBorderMedium else LightGlassBorderMedium
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
     
     Row(
         modifier = modifier

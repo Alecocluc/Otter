@@ -12,6 +12,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glassmorphism Card Component
@@ -31,12 +33,24 @@ import androidx.compose.ui.unit.dp
 fun GlassCard(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 24.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.1f),
-    borderColor: Color = Color.White.copy(alpha = 0.2f),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
+    borderColor: Color? = null,
     blurRadius: Dp = 16.dp,
     elevation: Dp = 0.dp,
     content: @Composable BoxScope.() -> Unit
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.3f)
+    } else {
+        LightGlassSurfaceMedium
+    }
+    
+    val effectiveBorderColor = borderColor ?: if (darkTheme) {
+        GlassBorderLight
+    } else {
+        LightGlassBorderMedium
+    }
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(cornerRadius),
@@ -52,8 +66,8 @@ fun GlassCard(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                backgroundColor.copy(alpha = backgroundColor.alpha * 1.2f),
-                                backgroundColor
+                                effectiveBackgroundColor.copy(alpha = effectiveBackgroundColor.alpha * 1.2f),
+                                effectiveBackgroundColor
                             )
                         ),
                         shape = RoundedCornerShape(cornerRadius)
@@ -76,8 +90,8 @@ fun GlassCard(
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                borderColor,
-                                borderColor.copy(alpha = borderColor.alpha * 0.3f)
+                                effectiveBorderColor,
+                                effectiveBorderColor.copy(alpha = effectiveBorderColor.alpha * 0.3f)
                             )
                         )
                     )
@@ -88,7 +102,7 @@ fun GlassCard(
                 modifier = Modifier
                     .padding(2.dp)
                     .clip(RoundedCornerShape(cornerRadius - 2.dp))
-                    .background(backgroundColor)
+                    .background(effectiveBackgroundColor)
             ) {
                 content()
             }
@@ -124,12 +138,20 @@ fun GlassCardCompact(
 @Composable
 fun GlassCardShimmer(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 24.dp
+    cornerRadius: Dp = 24.dp,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val shimmerColor = if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.2f)
+    } else {
+        LightGlassSurfaceLight
+    }
+    
     GlassCard(
         modifier = modifier,
         cornerRadius = cornerRadius,
-        backgroundColor = Color.White.copy(alpha = 0.05f)
+        darkTheme = darkTheme,
+        backgroundColor = shimmerColor
     ) {
         Box(
             modifier = Modifier

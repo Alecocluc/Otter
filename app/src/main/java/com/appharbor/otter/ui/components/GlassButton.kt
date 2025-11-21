@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Button Component
@@ -44,10 +46,24 @@ fun GlassButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     cornerRadius: Dp = 20.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.15f),
-    textColor: Color = Color.White,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
+    textColor: Color? = null,
     icon: (@Composable () -> Unit)? = null
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.4f)
+    } else {
+        LightGlassSurfaceMedium
+    }
+    
+    val effectiveTextColor = textColor ?: if (darkTheme) {
+        GlassTextPrimary
+    } else {
+        LightGlassTextPrimary
+    }
+    
+    val borderColor = if (darkTheme) GlassBorderLight else LightGlassBorderMedium
     val haptic = LocalHapticFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -70,13 +86,13 @@ fun GlassButton(
                 brush = Brush.verticalGradient(
                     colors = if (enabled) {
                         listOf(
-                            backgroundColor.copy(alpha = backgroundColor.alpha * 1.3f),
-                            backgroundColor
+                            effectiveBackgroundColor.copy(alpha = effectiveBackgroundColor.alpha * 1.3f),
+                            effectiveBackgroundColor
                         )
                     } else {
                         listOf(
-                            backgroundColor.copy(alpha = 0.05f),
-                            backgroundColor.copy(alpha = 0.05f)
+                            effectiveBackgroundColor.copy(alpha = 0.05f),
+                            effectiveBackgroundColor.copy(alpha = 0.05f)
                         )
                     }
                 )
@@ -100,8 +116,8 @@ fun GlassButton(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color.White.copy(alpha = 0.2f),
-                            Color.White.copy(alpha = 0.05f)
+                            borderColor,
+                            borderColor.copy(alpha = borderColor.alpha * 0.5f)
                         )
                     )
                 )
@@ -119,7 +135,7 @@ fun GlassButton(
             
             Text(
                 text = text,
-                color = if (enabled) textColor else textColor.copy(alpha = 0.4f),
+                color = if (enabled) effectiveTextColor else effectiveTextColor.copy(alpha = 0.4f),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -145,9 +161,15 @@ fun GlassIconButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     size: Dp = 48.dp,
-    backgroundColor: Color = Color.White.copy(alpha = 0.15f),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
     icon: @Composable () -> Unit
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.4f)
+    } else {
+        LightGlassSurfaceMedium
+    }
     val haptic = LocalHapticFeedback.current
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -169,8 +191,8 @@ fun GlassIconButton(
             .background(
                 brush = Brush.radialGradient(
                     colors = listOf(
-                        backgroundColor.copy(alpha = backgroundColor.alpha * 1.3f),
-                        backgroundColor
+                        effectiveBackgroundColor.copy(alpha = effectiveBackgroundColor.alpha * 1.3f),
+                        effectiveBackgroundColor
                     )
                 )
             )
@@ -202,14 +224,22 @@ fun GlassIconButton(
 fun GlassFAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White.copy(alpha = 0.2f),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
     icon: @Composable () -> Unit
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.5f)
+    } else {
+        LightGlassSurfaceHeavy
+    }
+    
     GlassIconButton(
         onClick = onClick,
         modifier = modifier,
         size = 64.dp,
-        backgroundColor = backgroundColor,
+        darkTheme = darkTheme,
+        backgroundColor = effectiveBackgroundColor,
         icon = icon
     )
 }
@@ -230,15 +260,23 @@ fun GlassExtendedFAB(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White.copy(alpha = 0.2f),
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    backgroundColor: Color? = null,
     icon: (@Composable () -> Unit)? = null
 ) {
+    val effectiveBackgroundColor = backgroundColor ?: if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.5f)
+    } else {
+        LightGlassSurfaceHeavy
+    }
+    
     GlassButton(
         text = text,
         onClick = onClick,
         modifier = modifier.height(56.dp),
         cornerRadius = 28.dp,
-        backgroundColor = backgroundColor,
+        darkTheme = darkTheme,
+        backgroundColor = effectiveBackgroundColor,
         icon = icon
     )
 }
@@ -258,13 +296,33 @@ fun GlassSegmentedButton(
     options: List<String>,
     selectedIndex: Int,
     onSelectionChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val backgroundColor = if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.3f)
+    } else {
+        LightGlassSurfaceLight
+    }
+    
+    val selectedColor = if (darkTheme) {
+        GlassBackgroundMid.copy(alpha = 0.6f)
+    } else {
+        LightGlassSurfaceMedium
+    }
+    
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val unselectedTextColor = if (darkTheme) {
+        GlassTextSecondary
+    } else {
+        LightGlassTextSecondary
+    }
+    
     Row(
         modifier = modifier
             .height(48.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White.copy(alpha = 0.1f))
+            .background(backgroundColor)
             .padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -279,7 +337,7 @@ fun GlassSegmentedButton(
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         if (isSelected) {
-                            Color.White.copy(alpha = 0.25f)
+                            selectedColor
                         } else {
                             Color.Transparent
                         }
@@ -292,7 +350,7 @@ fun GlassSegmentedButton(
             ) {
                 Text(
                     text = option,
-                    color = if (isSelected) Color.White else Color.White.copy(alpha = 0.6f),
+                    color = if (isSelected) textColor else unselectedTextColor,
                     fontSize = 14.sp,
                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                 )

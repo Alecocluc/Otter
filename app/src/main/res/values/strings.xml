@@ -26,4 +26,10 @@
     <!-- Downloads Screen -->
     <string name="downloads_title">Downloads</string>
     <string name="no_downloads">No downloads yet</string>
+    
+    <!-- Home Screen Sections -->
+    <string name="recent_downloads">Recent Downloads</string>
+    <string name="clear_recent">Clear</string>
+    <string name="share_video_text">Check out this video: %s</string>
+    <string name="share_video_title">Share Video</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.appharbor.otter.data.models.VideoInfo
 import com.appharbor.otter.data.python.YtDlpBridge
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -12,6 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+import com.appharbor.otter.data.models.DownloadedVideo
+import com.appharbor.otter.data.repositories.DownloadsRepository
 
 class HomeViewModel : ViewModel() {
     private val ytDlpBridge = YtDlpBridge()
@@ -36,6 +40,8 @@ class HomeViewModel : ViewModel() {
 
     private val _snackbarEvent = MutableSharedFlow<String>()
     val snackbarEvent: SharedFlow<String> = _snackbarEvent.asSharedFlow()
+
+    val recentDownloads: Flow<List<DownloadedVideo>> = DownloadsRepository.getRecent()
 
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query
@@ -65,6 +71,7 @@ class HomeViewModel : ViewModel() {
     }
     
     fun downloadVideo(url: String, outputPath: String, formatId: String? = null) {
+        val currentVideoInfo = _videoInfo.value
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -104,6 +111,17 @@ class HomeViewModel : ViewModel() {
                     _downloadStatus.value = "Download completed!"
                     _snackbarEvent.emit("Download completed: $path")
                     Log.d("HomeViewModel", "Download successful: $path")
+                    
+                    if (currentVideoInfo != null) {
+                        DownloadsRepository.addVideo(
+                            DownloadedVideo(
+                                title = currentVideoInfo.title ?: "Unknown",
+                                thumbnail = currentVideoInfo.thumbnail,
+                                duration = currentVideoInfo.duration,
+                                filePath = path
+                            )
+                        )
+                    }
                 }.onFailure { error ->
                     val errorMsg = error.message ?: "Unknown error"
                     _downloadStatus.value = "Download failed: $errorMsg"
@@ -117,6 +135,12 @@ class HomeViewModel : ViewModel() {
             } finally {
                 _isLoading.value = false
             }
+        }
+    }
+    
+    fun clearRecentDownloads() {
+        viewModelScope.launch {
+            DownloadsRepository.clearRecent()
         }
     }
     

@@ -84,10 +84,10 @@ val LightGlassBackgroundAlt1 = Color(0xFFE8EAF6)   // Light indigo
 val LightGlassBackgroundAlt2 = Color(0xFFC5CAE9)   // Soft indigo
 val LightGlassBackgroundAlt3 = Color(0xFFB39DDB)   // Soft purple
 
-// Surface colors
-val LightGlassSurfaceLight = Color.Black.copy(alpha = 0.03f)
-val LightGlassSurfaceMedium = Color.Black.copy(alpha = 0.05f)
-val LightGlassSurfaceHeavy = Color.Black.copy(alpha = 0.08f)
+// Surface colors - very subtle for clean light mode
+val LightGlassSurfaceLight = Color(0xFFF8F9FA)   // Very light gray
+val LightGlassSurfaceMedium = Color(0xFFF0F2F5)  // Soft light gray
+val LightGlassSurfaceHeavy = Color(0xFFE8EAED)   // Light gray
 
 // Text colors
 val LightGlassTextPrimary = Color(0xFF1A1A1A)
@@ -101,15 +101,15 @@ val LightGlassIconSecondary = Color(0xFF666666)
 val LightGlassIconTertiary = Color(0xFF999999)
 val LightGlassIconDisabled = Color(0xFFCCCCCC)
 
-// Border colors
-val LightGlassBorderLight = Color.Black.copy(alpha = 0.08f)
-val LightGlassBorderMedium = Color.Black.copy(alpha = 0.12f)
-val LightGlassBorderHeavy = Color.Black.copy(alpha = 0.2f)
+// Border colors - subtle and clean
+val LightGlassBorderLight = Color(0xFFE0E0E0)    // Very light border
+val LightGlassBorderMedium = Color(0xFFD0D0D0)   // Soft border
+val LightGlassBorderHeavy = Color(0xFFBDBDBD)    // Medium border
 
-// Overlay colors
-val LightGlassOverlayLight = Color.Black.copy(alpha = 0.1f)
-val LightGlassOverlayMedium = Color.Black.copy(alpha = 0.2f)
-val LightGlassOverlayHeavy = Color.Black.copy(alpha = 0.4f)
+// Overlay colors - softer overlays
+val LightGlassOverlayLight = Color.Black.copy(alpha = 0.04f)
+val LightGlassOverlayMedium = Color.Black.copy(alpha = 0.08f)
+val LightGlassOverlayHeavy = Color.Black.copy(alpha = 0.15f)
 
 // Shimmer effect colors
 val LightGlassShimmerBase = Color.Transparent
@@ -205,3 +205,9 @@ fun glassBackgroundGradientAlt(): List<Color> =
  */
 fun glassProgressGradient(): List<Color> =
     listOf(GlassProgressStart, GlassProgressEnd)
+
+/**
+ * Returns the accent gradient colors for decorative elements
+ */
+fun glassAccentGradient(): List<Color> =
+    listOf(GlassAccentPrimary, GlassAccentSecondary, GlassAccentTertiary)

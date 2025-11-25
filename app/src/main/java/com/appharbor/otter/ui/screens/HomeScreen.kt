@@ -28,6 +28,7 @@ import com.appharbor.otter.ui.components.GlassProgressSnackbar
 import com.appharbor.otter.ui.components.GlassBottomSheetContent
 import com.appharbor.otter.ui.components.GlassTitleBar
 import com.appharbor.otter.ui.components.GlassVideoCard
+import com.appharbor.otter.ui.components.GlassCard
 import com.appharbor.otter.ui.viewmodels.HomeViewModel
 import com.appharbor.otter.data.models.VideoInfo
 import com.appharbor.otter.ui.theme.*
@@ -65,90 +66,133 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
-        snackbarHost = { 
-            Box(
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 80.dp),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                // Show progress snackbar when downloading (any status except empty or completed)
-                if (downloadStatus.isNotEmpty() && !downloadStatus.startsWith("Download completed")) {
-                    GlassProgressSnackbar(
-                        message = downloadStatus,
-                        progress = downloadProgress,
-                        darkTheme = darkTheme
-                    )
-                } else {
-                    GlassSnackbarHost(hostState = snackbarHostState)
-                }
-            }
-        },
-        containerColor = Color.Transparent,
-        contentColor = textPrimary
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(bottom = 100.dp)
+                contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
             ) {
                 item {
-                    GlassTitleBar(title = stringResource(R.string.app_name))
-                    Spacer(modifier = Modifier.height(32.dp))
+                    // Hero Section
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        GlassTitleBar(
+                            title = stringResource(R.string.app_name),
+                            darkTheme = darkTheme
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        Text(
+                            text = "Download videos with ease",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = textSecondary,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
                     
+                    // Search Input
                     GlassSearchInput(
                         value = searchQuery,
                         onValueChange = viewModel::onSearchQueryChange,
                         onSearch = viewModel::searchVideo,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = "Paste video URL here...",
+                        darkTheme = darkTheme
                     )
                 }
 
                 if (isLoading && downloadStatus.isEmpty()) {
                     item {
-                        Spacer(modifier = Modifier.height(32.dp))
-                        CircularProgressIndicator(color = textPrimary)
+                        Spacer(modifier = Modifier.height(48.dp))
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            CircularProgressIndicator(color = textPrimary)
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Loading video info...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = textSecondary
+                            )
+                        }
                     }
                 }
 
                 item {
                     error?.let {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = it, color = GlassError)
+                        Spacer(modifier = Modifier.height(24.dp))
+                        GlassCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            darkTheme = darkTheme
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp)
+                            ) {
+                                Text(
+                                    text = "Error",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = GlassError
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = textSecondary
+                                )
+                            }
+                        }
                     }
                 }
                 
                 if (recentDownloads.isNotEmpty()) {
                     item {
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Row(
+                        Spacer(modifier = Modifier.height(48.dp))
+                        
+                        // Section Header
+                        GlassCard(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            cornerRadius = 12.dp,
+                            darkTheme = darkTheme
                         ) {
-                            Text(
-                                text = stringResource(R.string.recent_downloads),
-                                style = MaterialTheme.typography.titleMedium,
-                                color = textPrimary
-                            )
-                            
-                            TextButton(onClick = { viewModel.clearRecentDownloads() }) {
-                                Text(
-                                    text = stringResource(R.string.clear_recent),
-                                    color = textSecondary
-                                )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.recent_downloads),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = textPrimary
+                                    )
+                                    Text(
+                                        text = "${recentDownloads.size} video${if (recentDownloads.size > 1) "s" else ""}",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = textSecondary
+                                    )
+                                }
+                                
+                                TextButton(onClick = { viewModel.clearRecentDownloads() }) {
+                                    Text(
+                                        text = stringResource(R.string.clear_recent),
+                                        color = textSecondary,
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                }
                             }
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                     
                     items(recentDownloads.take(3)) { video ->
@@ -175,46 +219,67 @@ fun HomeScreen(
                                 } catch (e: Exception) {
                                     // Handle error
                                 }
-                            }
+                            },
+                            darkTheme = darkTheme
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
 
-            if (videoInfo != null) {
-                ModalBottomSheet(
-                    onDismissRequest = { viewModel.clearVideoInfo() },
-                    sheetState = sheetState,
-                    containerColor = Color.Transparent,
-                    dragHandle = null
-                ) {
-                    GlassBottomSheetContent {
-                        VideoDownloadSheetContent(
-                            videoInfo = videoInfo!!, onDownload = { formatId ->
-                                // Clean filename by removing invalid characters
-                                val cleanTitle = videoInfo!!.title
-                                    ?.replace(Regex("[\\\\/:*?\"<>|]"), "")
-                                    ?.take(50) ?: "video"
-                                val filename = "$cleanTitle.mp4"
-                                
-                                // Use public Downloads folder with Otter subfolder
-                                val downloadDir = File(
-                                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                                    "Otter"
-                                )
-                                
-                                // Create directory if it doesn't exist
-                                if (!downloadDir.exists()) {
-                                    downloadDir.mkdirs()
-                                }
-                                
-                                val path = File(downloadDir, filename).absolutePath
-                                viewModel.downloadVideo(searchQuery, path, formatId)
-                                viewModel.clearVideoInfo()
-                            })
-                    }
+        if (videoInfo != null) {
+            ModalBottomSheet(
+                onDismissRequest = { viewModel.clearVideoInfo() },
+                sheetState = sheetState,
+                containerColor = Color.Transparent,
+                dragHandle = null
+            ) {
+                GlassBottomSheetContent {
+                    VideoDownloadSheetContent(
+                        videoInfo = videoInfo!!,
+                        darkTheme = darkTheme,
+                        onDownload = { formatId ->
+                            // Clean filename by removing invalid characters
+                            val cleanTitle = videoInfo!!.title
+                                ?.replace(Regex("[\\\\/:*?\"<>|]"), "")
+                                ?.take(50) ?: "video"
+                            val filename = "$cleanTitle.mp4"
+                            
+                            // Use public Downloads folder with Otter subfolder
+                            val downloadDir = File(
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                "Otter"
+                            )
+                            
+                            // Create directory if it doesn't exist
+                            if (!downloadDir.exists()) {
+                                downloadDir.mkdirs()
+                            }
+                            
+                            val path = File(downloadDir, filename).absolutePath
+                            viewModel.downloadVideo(searchQuery, path, formatId)
+                            viewModel.clearVideoInfo()
+                        }
+                    )
                 }
+            }
+        }
+        
+        // Snackbar positioned at the bottom, just above the navbar
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 120.dp), // Above the floating navbar
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            if (downloadStatus.isNotEmpty() && !downloadStatus.startsWith("Download completed")) {
+                GlassProgressSnackbar(
+                    message = downloadStatus,
+                    progress = downloadProgress,
+                    darkTheme = darkTheme
+                )
+            } else {
+                GlassSnackbarHost(hostState = snackbarHostState)
             }
         }
     }

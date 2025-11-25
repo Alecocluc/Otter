@@ -45,9 +45,10 @@ fun GlassNavigationBar(
 ) {
     Box(
         modifier = modifier
-            .navigationBarsPadding()
-            .padding(horizontal = 24.dp, vertical = 24.dp)
             .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 12.dp)
+            .navigationBarsPadding()
             .height(72.dp)
             .clip(RoundedCornerShape(36.dp)) // Capsule shape
     ) {

@@ -57,10 +57,9 @@ fun MainScreen(
                 }
             }
         ) { paddingValues ->
+            // Don't use padding from Scaffold so content can extend behind the floating navbar
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
+                modifier = Modifier.fillMaxSize()
             ) {
                 when (selectedNav) {
                     0 -> HomeScreen(darkTheme = darkTheme)

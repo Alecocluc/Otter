@@ -31,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.appharbor.otter.ui.theme.OtterTheme
+import com.appharbor.otter.ui.theme.*
+import androidx.compose.foundation.isSystemInDarkTheme
 
 /**
  * Components Preview Screen
@@ -45,7 +47,13 @@ import com.appharbor.otter.ui.theme.OtterTheme
  * - Demonstrate the design system
  */
 @Composable
-fun ComponentsPreview() {
+fun ComponentsPreview(
+    darkTheme: Boolean = isSystemInDarkTheme()
+) {
+    val textPrimary = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val textSecondary = if (darkTheme) GlassTextSecondary else LightGlassTextSecondary
+    val iconColor = if (darkTheme) GlassIconPrimary else LightGlassIconPrimary
+    
     var inputValue by remember { mutableStateOf("") }
     var searchValue by remember { mutableStateOf("") }
     var textAreaValue by remember { mutableStateOf("") }
@@ -54,7 +62,7 @@ fun ComponentsPreview() {
     var selectedRadio by remember { mutableStateOf(0) }
     var selectedSegment by remember { mutableStateOf(0) }
 
-    GlassBackground {
+    GlassBackground(darkTheme = darkTheme) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,13 +78,13 @@ fun ComponentsPreview() {
                 ) {
                     Text(
                         text = "Glass Components",
-                        color = Color.White,
+                        color = textPrimary,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "Premium UI Component Library",
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = textSecondary,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier.padding(top = 4.dp)
@@ -86,12 +94,13 @@ fun ComponentsPreview() {
 
             // Cards Section
             item {
-                ComponentSection(title = "Cards") {
+                ComponentSection(title = "Cards", darkTheme = darkTheme) {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         GlassCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(120.dp)
+                                .height(120.dp),
+                            darkTheme = darkTheme
                         ) {
                             Box(
                                 modifier = Modifier
@@ -101,7 +110,7 @@ fun ComponentsPreview() {
                             ) {
                                 Text(
                                     text = "Standard Glass Card",
-                                    color = Color.White,
+                                    color = textPrimary,
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -121,7 +130,7 @@ fun ComponentsPreview() {
                             ) {
                                 Text(
                                     text = "Compact Glass Card",
-                                    color = Color.White,
+                                    color = textPrimary,
                                     fontSize = 16.sp
                                 )
                             }
@@ -130,7 +139,8 @@ fun ComponentsPreview() {
                         GlassCardShimmer(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(80.dp)
+                                .height(80.dp),
+                            darkTheme = darkTheme
                         )
                     }
                 }
@@ -138,19 +148,21 @@ fun ComponentsPreview() {
 
             // Buttons Section
             item {
-                ComponentSection(title = "Buttons") {
+                ComponentSection(title = "Buttons", darkTheme = darkTheme) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         GlassButton(
                             text = "Primary Button",
                             onClick = { },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            darkTheme = darkTheme
                         )
 
                         GlassButton(
                             text = "Disabled Button",
                             onClick = { },
                             modifier = Modifier.fillMaxWidth(),
-                            enabled = false
+                            enabled = false,
+                            darkTheme = darkTheme
                         )
 
                         Row(
@@ -158,24 +170,30 @@ fun ComponentsPreview() {
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             GlassIconButton(
-                                onClick = { }) {
+                                onClick = { },
+                                darkTheme = darkTheme
+                            ) {
                                 Text(
-                                    text = "♥", color = Color.White, fontSize = 20.sp
+                                    text = "♥", color = textPrimary, fontSize = 20.sp
                                 )
                             }
 
                             GlassIconButton(
-                                onClick = { }) {
+                                onClick = { },
+                                darkTheme = darkTheme
+                            ) {
                                 Text(
-                                    text = "★", color = Color.White, fontSize = 20.sp
+                                    text = "★", color = textPrimary, fontSize = 20.sp
                                 )
                             }
 
                             GlassFAB(
-                                onClick = { }) {
+                                onClick = { },
+                                darkTheme = darkTheme
+                            ) {
                                 Text(
                                     text = "+",
-                                    color = Color.White,
+                                    color = textPrimary,
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -183,11 +201,14 @@ fun ComponentsPreview() {
                         }
 
                         GlassExtendedFAB(
-                            text = "New Download", onClick = { }, icon = {
+                            text = "New Download", 
+                            onClick = { }, 
+                            darkTheme = darkTheme,
+                            icon = {
                             Icon(
                                 imageVector = Icons.Default.Download,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = iconColor,
                                 modifier = Modifier.size(20.dp)
                             )
                         }, modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -197,7 +218,8 @@ fun ComponentsPreview() {
                             options = listOf("Video", "Audio", "Both"),
                             selectedIndex = selectedSegment,
                             onSelectionChanged = { selectedSegment = it },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            darkTheme = darkTheme
                         )
                     }
                 }
@@ -205,14 +227,15 @@ fun ComponentsPreview() {
 
             // Input Fields Section
             item {
-                ComponentSection(title = "Input Fields") {
+                ComponentSection(title = "Input Fields", darkTheme = darkTheme) {
                     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                         GlassInput(
                             value = inputValue,
                             onValueChange = { inputValue = it },
                             placeholder = "Enter URL...",
                             label = "Video URL",
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            darkTheme = darkTheme
                         )
 
                         GlassSearchInput(
@@ -220,7 +243,8 @@ fun ComponentsPreview() {
                             onValueChange = { searchValue = it },
                             onSearch = { },
                             placeholder = "Search downloads...",
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            darkTheme = darkTheme
                         )
 
                         GlassTextArea(
@@ -229,7 +253,8 @@ fun ComponentsPreview() {
                             placeholder = "Enter multiple URLs (one per line)...",
                             label = "Batch Download",
                             modifier = Modifier.fillMaxWidth(),
-                            minLines = 4
+                            minLines = 4,
+                            darkTheme = darkTheme
                         )
                     }
                 }
@@ -237,7 +262,7 @@ fun ComponentsPreview() {
 
             // Toggles Section
             item {
-                ComponentSection(title = "Toggles") {
+                ComponentSection(title = "Toggles", darkTheme = darkTheme) {
                     GlassToggleGroup(
                         items = listOf(
                             ToggleItem(
@@ -253,17 +278,20 @@ fun ComponentsPreview() {
                                 description = "Show download progress notifications",
                                 checked = toggleStates[2]
                             )
-                        ), onItemToggled = { index, checked ->
+                        ), 
+                        onItemToggled = { index, checked ->
                             toggleStates = toggleStates.toMutableList().apply {
                                 this[index] = checked
                             }
-                        })
+                        },
+                        darkTheme = darkTheme
+                    )
                 }
             }
 
             // Checkboxes Section
             item {
-                ComponentSection(title = "Checkboxes") {
+                ComponentSection(title = "Checkboxes", darkTheme = darkTheme) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         GlassCheckboxGroup(
                             items = listOf(
@@ -282,7 +310,7 @@ fun ComponentsPreview() {
 
             // Radio Buttons Section
             item {
-                ComponentSection(title = "Radio Buttons") {
+                ComponentSection(title = "Radio Buttons", darkTheme = darkTheme) {
                     GlassRadioGroup(
                         items = listOf("Best Quality", "1080p", "720p", "Audio Only"),
                         selectedIndex = selectedRadio,
@@ -292,29 +320,33 @@ fun ComponentsPreview() {
 
             // Navigation Section
             item {
-                ComponentSection(title = "Navigation") {
+                ComponentSection(title = "Navigation", darkTheme = darkTheme) {
                     var selectedNav by remember { mutableStateOf(0) }
 
                     GlassNavigationBar(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        darkTheme = darkTheme
                     ) {
                         GlassNavigationBarItem(
                             selected = selectedNav == 0,
                             onClick = { selectedNav = 0 },
                             icon = Icons.Default.Home,
-                            label = "Home"
+                            label = "Home",
+                            darkTheme = darkTheme
                         )
                         GlassNavigationBarItem(
                             selected = selectedNav == 1,
                             onClick = { selectedNav = 1 },
                             icon = Icons.Default.Search,
-                            label = "Search"
+                            label = "Search",
+                            darkTheme = darkTheme
                         )
                         GlassNavigationBarItem(
                             selected = selectedNav == 2,
                             onClick = { selectedNav = 2 },
                             icon = Icons.Default.Settings,
-                            label = "Settings"
+                            label = "Settings",
+                            darkTheme = darkTheme
                         )
                     }
                 }
@@ -322,14 +354,17 @@ fun ComponentsPreview() {
 
             // Feedback Section
             item {
-                ComponentSection(title = "Feedback") {
+                ComponentSection(title = "Feedback", darkTheme = darkTheme) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         GlassSnackbarContent(
-                            message = "Download started successfully", actionLabel = "View"
+                            message = "Download started successfully", 
+                            actionLabel = "View",
+                            darkTheme = darkTheme
                         )
 
                         GlassSnackbarContent(
                             message = "Connection lost. Retrying...",
+                            darkTheme = darkTheme
                         )
                     }
                 }
@@ -337,11 +372,11 @@ fun ComponentsPreview() {
 
             // Dividers Section
             item {
-                ComponentSection(title = "Dividers & Spacers") {
+                ComponentSection(title = "Dividers & Spacers", darkTheme = darkTheme) {
                     Column {
                         Text(
                             text = "Content Above",
-                            color = Color.White.copy(alpha = 0.7f),
+                            color = textSecondary,
                             fontSize = 14.sp
                         )
 
@@ -349,7 +384,7 @@ fun ComponentsPreview() {
 
                         Text(
                             text = "Content Below",
-                            color = Color.White.copy(alpha = 0.7f),
+                            color = textSecondary,
                             fontSize = 14.sp
                         )
 
@@ -378,17 +413,22 @@ fun ComponentsPreview() {
  */
 @Composable
 private fun ComponentSection(
-    title: String, content: @Composable () -> Unit
+    title: String, 
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
 ) {
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    
     Column(
         modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = title, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.SemiBold
+            text = title, color = textColor, fontSize = 20.sp, fontWeight = FontWeight.SemiBold
         )
 
         GlassCard(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            darkTheme = darkTheme
         ) {
             Box(
                 modifier = Modifier

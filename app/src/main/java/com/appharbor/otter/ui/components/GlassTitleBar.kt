@@ -1,25 +1,30 @@
 package com.appharbor.otter.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.appharbor.otter.R
+import com.appharbor.otter.ui.theme.*
 
 @Composable
 fun GlassTitleBar(
     modifier: Modifier = Modifier,
-    title: String = "Otter"
+    title: String = "Otter",
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val iconTint = if (darkTheme) GlassIconPrimary else LightGlassIconPrimary
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -42,7 +47,7 @@ fun GlassTitleBar(
                         painter = painterResource(id = R.drawable.ic_launcher_foreground),
                         contentDescription = "App Icon",
                         modifier = Modifier.size(32.dp),
-                        colorFilter = ColorFilter.tint(Color.White)
+                        colorFilter = ColorFilter.tint(iconTint)
                     )
                 }
             }
@@ -55,7 +60,7 @@ fun GlassTitleBar(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
                 ),
-                color = Color.White
+                color = textColor
             )
         }
     }

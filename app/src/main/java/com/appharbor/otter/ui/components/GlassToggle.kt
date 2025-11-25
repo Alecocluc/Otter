@@ -75,7 +75,7 @@ fun GlassToggle(
     val effectiveThumbColor = thumbColor ?: if (darkTheme) {
         GlassTextPrimary
     } else {
-        Color.White
+        LightGlassBackgroundMid
     }
     
     val effectiveTextColor = textColor ?: if (darkTheme) {
@@ -253,7 +253,7 @@ fun GlassToggleWithIcons(
                 .background(trackColor)
                 .border(
                     width = 1.dp,
-                    color = Color.White.copy(alpha = 0.2f),
+                    color = borderColor,
                     shape = RoundedCornerShape(trackHeight / 2)
                 )
         ) {
@@ -279,10 +279,10 @@ fun GlassToggleWithIcons(
                     .offset(x = thumbOffset, y = (trackHeight - thumbSize) / 2)
                     .size(thumbSize)
                     .clip(CircleShape)
-                    .background(Color.White)
+                    .background(if (darkTheme) GlassTextPrimary else LightGlassBackgroundMid)
                     .border(
                         width = 1.dp,
-                        color = Color.White.copy(alpha = 0.3f),
+                        color = borderColor.copy(alpha = 0.3f),
                         shape = CircleShape
                     )
             )
@@ -292,7 +292,7 @@ fun GlassToggleWithIcons(
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = it,
-                color = if (enabled) Color.White else Color.White.copy(alpha = 0.4f),
+                color = if (enabled) textColor else textColor.copy(alpha = 0.4f),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
@@ -313,8 +313,12 @@ fun GlassToggleWithIcons(
 fun GlassToggleGroup(
     items: List<ToggleItem>,
     onItemToggled: (Int, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val textColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val secondaryTextColor = if (darkTheme) GlassTextSecondary else LightGlassTextSecondary
+    
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -328,14 +332,14 @@ fun GlassToggleGroup(
                 Column {
                     Text(
                         text = item.label,
-                        color = Color.White,
+                        color = textColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
                     item.description?.let { desc ->
                         Text(
                             text = desc,
-                            color = Color.White.copy(alpha = 0.6f),
+                            color = secondaryTextColor,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier.padding(top = 4.dp)
@@ -346,7 +350,8 @@ fun GlassToggleGroup(
                 GlassToggle(
                     checked = item.checked,
                     onCheckedChange = { onItemToggled(index, it) },
-                    enabled = item.enabled
+                    enabled = item.enabled,
+                    darkTheme = darkTheme
                 )
             }
         }

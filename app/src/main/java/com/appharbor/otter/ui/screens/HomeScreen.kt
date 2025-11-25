@@ -3,6 +3,7 @@ package com.appharbor.otter.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,6 +30,7 @@ import com.appharbor.otter.ui.components.GlassTitleBar
 import com.appharbor.otter.ui.components.GlassVideoCard
 import com.appharbor.otter.ui.viewmodels.HomeViewModel
 import com.appharbor.otter.data.models.VideoInfo
+import com.appharbor.otter.ui.theme.*
 import android.os.Environment
 import java.io.File
 import android.content.Intent
@@ -37,7 +39,8 @@ import androidx.core.content.FileProvider
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val videoInfo by viewModel.videoInfo.collectAsState()
@@ -52,6 +55,9 @@ fun HomeScreen(
     )
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    
+    val textPrimary = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val textSecondary = if (darkTheme) GlassTextSecondary else LightGlassTextSecondary
 
     LaunchedEffect(Unit) {
         viewModel.snackbarEvent.collect { message ->
@@ -71,7 +77,8 @@ fun HomeScreen(
                 if (downloadStatus.isNotEmpty() && !downloadStatus.startsWith("Download completed")) {
                     GlassProgressSnackbar(
                         message = downloadStatus,
-                        progress = downloadProgress
+                        progress = downloadProgress,
+                        darkTheme = darkTheme
                     )
                 } else {
                     GlassSnackbarHost(hostState = snackbarHostState)
@@ -79,7 +86,7 @@ fun HomeScreen(
             }
         },
         containerColor = Color.Transparent,
-        contentColor = Color.White
+        contentColor = textPrimary
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -109,14 +116,14 @@ fun HomeScreen(
                 if (isLoading && downloadStatus.isEmpty()) {
                     item {
                         Spacer(modifier = Modifier.height(32.dp))
-                        CircularProgressIndicator(color = Color.White)
+                        CircularProgressIndicator(color = textPrimary)
                     }
                 }
 
                 item {
                     error?.let {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = it, color = Color.Red)
+                        Text(text = it, color = GlassError)
                     }
                 }
                 
@@ -131,13 +138,13 @@ fun HomeScreen(
                             Text(
                                 text = stringResource(R.string.recent_downloads),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = Color.White
+                                color = textPrimary
                             )
                             
                             TextButton(onClick = { viewModel.clearRecentDownloads() }) {
                                 Text(
                                     text = stringResource(R.string.clear_recent),
-                                    color = Color.White.copy(alpha = 0.7f)
+                                    color = textSecondary
                                 )
                             }
                         }
@@ -215,8 +222,13 @@ fun HomeScreen(
 
 @Composable
 fun VideoDownloadSheetContent(
-    videoInfo: VideoInfo, onDownload: (String?) -> Unit
+    videoInfo: VideoInfo, 
+    onDownload: (String?) -> Unit,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val textPrimary = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val textSecondary = if (darkTheme) GlassTextSecondary else LightGlassTextSecondary
+    
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -241,25 +253,26 @@ fun VideoDownloadSheetContent(
         Text(
             text = videoInfo.title ?: stringResource(R.string.unknown_title),
             style = MaterialTheme.typography.titleLarge,
-            color = Color.White
+            color = textPrimary
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.duration_format, videoInfo.duration ?: 0),
-            color = Color.Gray
+            color = textSecondary
         )
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = stringResource(R.string.formats_available, videoInfo.formats.size),
-            color = Color.White
+            color = textPrimary
         )
         Spacer(modifier = Modifier.height(24.dp))
 
         GlassButton(
             text = stringResource(R.string.download_best_quality),
             onClick = { onDownload("best") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            darkTheme = darkTheme
         )
     }
 }

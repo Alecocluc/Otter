@@ -150,7 +150,8 @@ fun GlassCheckbox(
 fun GlassCheckboxGroup(
     items: List<CheckboxItem>,
     onItemCheckedChange: (Int, Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     Column(
         modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -160,7 +161,8 @@ fun GlassCheckboxGroup(
                 checked = item.checked,
                 onCheckedChange = { onItemCheckedChange(index, it) },
                 label = item.label,
-                enabled = item.enabled
+                enabled = item.enabled,
+                darkTheme = darkTheme
             )
         }
     }
@@ -299,14 +301,18 @@ fun GlassRadioGroup(
     items: List<String>,
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     Column(
         modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items.forEachIndexed { index, item ->
             GlassRadioButton(
-                selected = index == selectedIndex, onClick = { onItemSelected(index) }, label = item
+                selected = index == selectedIndex, 
+                onClick = { onItemSelected(index) }, 
+                label = item,
+                darkTheme = darkTheme
             )
         }
     }

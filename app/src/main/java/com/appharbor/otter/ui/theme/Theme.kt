@@ -23,75 +23,101 @@ import androidx.core.view.WindowCompat
  * Features deep backgrounds, subtle surfaces, and vibrant accents.
  */
 private val GlassDarkColorScheme = darkColorScheme(
+    // Primary colors
     primary = GlassAccentPrimary,
-    onPrimary = Color.White,
+    onPrimary = GlassTextPrimary,
     primaryContainer = GlassSurfaceHeavy,
     onPrimaryContainer = GlassTextPrimary,
     
+    // Secondary colors
     secondary = GlassAccentSecondary,
-    onSecondary = Color.White,
+    onSecondary = GlassTextPrimary,
     secondaryContainer = GlassSurfaceMedium,
     onSecondaryContainer = GlassTextPrimary,
     
+    // Tertiary colors
     tertiary = GlassAccentTertiary,
-    onTertiary = Color.White,
+    onTertiary = GlassTextPrimary,
     tertiaryContainer = GlassSurfaceLight,
     onTertiaryContainer = GlassTextPrimary,
     
+    // Background and surface
     background = GlassBackgroundStart,
     onBackground = GlassTextPrimary,
-    
     surface = GlassSurfaceLight,
     onSurface = GlassTextPrimary,
     surfaceVariant = GlassSurfaceMedium,
     onSurfaceVariant = GlassTextSecondary,
     
+    // Inverse colors
+    inverseSurface = LightGlassBackgroundStart,
+    inverseOnSurface = LightGlassTextPrimary,
+    inversePrimary = GlassAccentPrimary,
+    
+    // Error colors
     error = GlassError,
-    onError = Color.White,
+    onError = GlassTextPrimary,
     errorContainer = GlassError.copy(alpha = 0.2f),
     onErrorContainer = GlassError,
     
+    // Outline colors
     outline = GlassBorderMedium,
     outlineVariant = GlassBorderLight,
+    
+    // Scrim
+    scrim = GlassOverlayHeavy,
 )
 
 /**
  * Glassmorphism Light Color Scheme
  * 
- * A light variant for future light mode support.
- * Features soft backgrounds with dark text.
+ * A light variant with soft backgrounds and dark text.
+ * Maintains the glass aesthetic with lighter transparency effects.
  */
 private val GlassLightColorScheme = lightColorScheme(
+    // Primary colors
     primary = GlassAccentPrimary,
-    onPrimary = Color.White,
+    onPrimary = GlassTextPrimary,
     primaryContainer = LightGlassSurfaceHeavy,
     onPrimaryContainer = LightGlassTextPrimary,
     
+    // Secondary colors
     secondary = GlassAccentSecondary,
-    onSecondary = Color.White,
+    onSecondary = GlassTextPrimary,
     secondaryContainer = LightGlassSurfaceMedium,
     onSecondaryContainer = LightGlassTextPrimary,
     
+    // Tertiary colors
     tertiary = GlassAccentTertiary,
-    onTertiary = Color.White,
+    onTertiary = GlassTextPrimary,
     tertiaryContainer = LightGlassSurfaceLight,
     onTertiaryContainer = LightGlassTextPrimary,
     
+    // Background and surface
     background = LightGlassBackgroundStart,
     onBackground = LightGlassTextPrimary,
-    
     surface = LightGlassSurfaceLight,
     onSurface = LightGlassTextPrimary,
     surfaceVariant = LightGlassSurfaceMedium,
     onSurfaceVariant = LightGlassTextSecondary,
     
+    // Inverse colors
+    inverseSurface = GlassBackgroundStart,
+    inverseOnSurface = GlassTextPrimary,
+    inversePrimary = GlassAccentPrimary,
+    
+    // Error colors
     error = GlassError,
-    onError = Color.White,
+    onError = GlassTextPrimary,
     errorContainer = GlassError.copy(alpha = 0.1f),
     onErrorContainer = GlassError,
     
-    outline = Color.Black.copy(alpha = 0.2f),
-    outlineVariant = Color.Black.copy(alpha = 0.1f),
+    // Outline colors
+    outline = LightGlassBorderMedium,
+    outlineVariant = LightGlassBorderLight,
+    
+    // Scrim
+    scrim = LightGlassOverlayHeavy,
 )
 
 /**

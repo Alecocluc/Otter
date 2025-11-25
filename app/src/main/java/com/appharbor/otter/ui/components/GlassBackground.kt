@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.appharbor.otter.ui.theme.*
 
 /**
  * Glass Background Component
@@ -27,15 +28,15 @@ fun GlassBackground(
 ) {
     val gradientColors = colors ?: if (darkTheme) {
         listOf(
-            Color(0xFF0A0E27),
-            Color(0xFF1A1F3A),
-            Color(0xFF2D1B3D)
+            GlassBackgroundStart,
+            GlassBackgroundMid,
+            GlassBackgroundEnd
         )
     } else {
         listOf(
-            Color(0xFFF5F7FA),
-            Color(0xFFFFFFFF),
-            Color(0xFFEEF2F7)
+            LightGlassBackgroundStart,
+            LightGlassBackgroundMid,
+            LightGlassBackgroundEnd
         )
     }
     
@@ -67,9 +68,9 @@ fun GlassBackground(
 @Composable
 fun AnimatedGlassBackground(
     modifier: Modifier = Modifier,
-    primaryColor: Color = Color(0xFF0A0E27),
-    secondaryColor: Color = Color(0xFF1A1F3A),
-    tertiaryColor: Color = Color(0xFF2D1B3D),
+    primaryColor: Color = GlassBackgroundStart,
+    secondaryColor: Color = GlassBackgroundMid,
+    tertiaryColor: Color = GlassBackgroundEnd,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
@@ -105,9 +106,9 @@ fun LightGlassBackground(
     GlassBackground(
         modifier = modifier,
         colors = listOf(
-            Color(0xFFE8EAF6),
-            Color(0xFFC5CAE9),
-            Color(0xFFB39DDB)
+            LightGlassBackgroundAlt1,
+            LightGlassBackgroundAlt2,
+            LightGlassBackgroundAlt3
         ),
         content = content
     )
@@ -125,7 +126,7 @@ fun LightGlassBackground(
 @Composable
 fun GlassDivider(
     modifier: Modifier = Modifier,
-    color: Color = Color.White.copy(alpha = 0.1f),
+    color: Color = GlassDividerColor,
     thickness: androidx.compose.ui.unit.Dp = 1.dp
 ) {
     Box(
@@ -186,8 +187,8 @@ fun GlassSpacer(
 @Composable
 fun GlassSurface(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White.copy(alpha = 0.1f),
-    borderColor: Color = Color.White.copy(alpha = 0.15f),
+    backgroundColor: Color = GlassSurfaceLight,
+    borderColor: Color = GlassSurfaceMedium,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
@@ -226,16 +227,18 @@ fun GlassSurface(
 @Composable
 fun GlassEffect(
     modifier: Modifier = Modifier,
-    alpha: Float = 0.1f
+    alpha: Float = 0.1f,
+    darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme()
 ) {
+    val baseColor = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color.White.copy(alpha = alpha * 1.5f),
-                        Color.White.copy(alpha = alpha * 0.5f)
+                        baseColor.copy(alpha = alpha * 1.5f),
+                        baseColor.copy(alpha = alpha * 0.5f)
                     )
                 )
             )

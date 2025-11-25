@@ -370,11 +370,7 @@ fun GlassSearchInput(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = if (darkTheme) {
-                    Color.White.copy(alpha = 0.7f)
-                } else {
-                    Color.Black.copy(alpha = 0.6f)
-                },
+                tint = if (darkTheme) GlassIconSecondary else LightGlassIconSecondary,
                 modifier = Modifier.size(20.dp)
             )
         },

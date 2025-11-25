@@ -97,7 +97,7 @@ fun GlassProgressSnackbar(
         )
     } else {
         listOf(
-            Color.White.copy(alpha = 0.9f),
+            LightGlassBackgroundMid.copy(alpha = 0.9f),
             LightGlassBackgroundStart.copy(alpha = 0.95f)
         )
     }
@@ -187,10 +187,7 @@ fun GlassProgressSnackbar(
                         .clip(RoundedCornerShape(2.dp))
                         .background(
                             brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF00D9FF),
-                                    Color(0xFF0066FF)
-                                )
+                                colors = glassProgressGradient()
                             )
                         )
                 )
@@ -223,7 +220,7 @@ fun GlassSnackbarContent(
         )
     } else {
         listOf(
-            Color.White.copy(alpha = 0.9f),
+            LightGlassBackgroundMid.copy(alpha = 0.9f),
             LightGlassBackgroundStart.copy(alpha = 0.95f)
         )
     }

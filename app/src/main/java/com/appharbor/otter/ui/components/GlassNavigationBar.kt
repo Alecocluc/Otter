@@ -64,7 +64,7 @@ fun GlassNavigationBar(
                             )
                         } else {
                             listOf(
-                                Color.White.copy(alpha = 0.9f),
+                                LightGlassBackgroundMid.copy(alpha = 0.9f),
                                 LightGlassBackgroundStart.copy(alpha = 0.95f)
                             )
                         }
@@ -125,13 +125,13 @@ fun RowScope.GlassNavigationBarItem(
     icon: ImageVector,
     label: String,
     darkTheme: Boolean = androidx.compose.foundation.isSystemInDarkTheme(),
-    selectedColor: Color = Color(0xFF6C63FF),
+    selectedColor: Color = GlassNavSelected,
     unselectedColor: Color? = null
 ) {
     val itemUnselectedColor = unselectedColor ?: if (darkTheme) {
-        Color.White.copy(alpha = 0.5f)
+        GlassIconTertiary
     } else {
-        Color.Black.copy(alpha = 0.5f)
+        LightGlassIconTertiary
     }
     
     val haptic = LocalHapticFeedback.current
@@ -188,7 +188,7 @@ fun RowScope.GlassNavigationBarItem(
                 imageVector = icon,
                 contentDescription = label,
                 tint = if (selected) {
-                    if (darkTheme) Color.White else selectedColor
+                    if (darkTheme) GlassIconPrimary else selectedColor
                 } else {
                     itemUnselectedColor
                 },
@@ -201,7 +201,7 @@ fun RowScope.GlassNavigationBarItem(
         if (selected) {
             Text(
                 text = label,
-                color = if (darkTheme) Color.White else Color.Black.copy(alpha = 0.8f),
+                color = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier.padding(top = 4.dp)

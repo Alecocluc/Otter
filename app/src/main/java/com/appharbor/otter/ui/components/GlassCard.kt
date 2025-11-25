@@ -153,6 +153,7 @@ fun GlassCardShimmer(
         darkTheme = darkTheme,
         backgroundColor = shimmerColor
     ) {
+        val shimmerHighlight = if (darkTheme) GlassShimmerHighlight else LightGlassShimmerHighlight
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -160,7 +161,7 @@ fun GlassCardShimmer(
                     brush = Brush.horizontalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            Color.White.copy(alpha = 0.1f),
+                            shimmerHighlight,
                             Color.Transparent
                         )
                     )

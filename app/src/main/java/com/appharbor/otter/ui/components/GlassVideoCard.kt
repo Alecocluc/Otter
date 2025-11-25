@@ -1,6 +1,7 @@
 package com.appharbor.otter.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -12,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.appharbor.otter.data.models.DownloadedVideo
 import com.appharbor.otter.utils.VideoThumbnailExtractor
+import com.appharbor.otter.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -28,10 +29,16 @@ fun GlassVideoCard(
     video: DownloadedVideo,
     onShare: (DownloadedVideo) -> Unit,
     onPlay: (DownloadedVideo) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    darkTheme: Boolean = isSystemInDarkTheme()
 ) {
     val context = LocalContext.current
     var localThumbnailUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    
+    val textPrimary = if (darkTheme) GlassTextPrimary else LightGlassTextPrimary
+    val textSecondary = if (darkTheme) GlassTextSecondary else LightGlassTextSecondary
+    val iconColor = if (darkTheme) GlassIconPrimary else LightGlassIconPrimary
+    val overlayColor = if (darkTheme) GlassOverlayMedium else LightGlassOverlayMedium
     
     // Extract thumbnail from local video file
     LaunchedEffect(video.filePath) {
@@ -43,7 +50,8 @@ fun GlassVideoCard(
     
     GlassCard(
         modifier = modifier.fillMaxWidth(),
-        cornerRadius = 16.dp
+        cornerRadius = 16.dp,
+        darkTheme = darkTheme
     ) {
         Row(
             modifier = Modifier
@@ -71,13 +79,13 @@ fun GlassVideoCard(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.3f)),
+                                .background(overlayColor),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.PlayArrow,
                                 contentDescription = "Play",
-                                tint = Color.White,
+                                tint = iconColor,
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -86,7 +94,7 @@ fun GlassVideoCard(
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "Video",
-                            tint = Color.White
+                            tint = iconColor
                         )
                     }
                 }
@@ -100,7 +108,7 @@ fun GlassVideoCard(
                 Text(
                     text = video.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White,
+                    color = textPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -108,7 +116,7 @@ fun GlassVideoCard(
                 Text(
                     text = if (video.duration != null) formatDuration(video.duration) else "Unknown duration",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.7f)
+                    color = textSecondary
                 )
             }
             
@@ -116,7 +124,7 @@ fun GlassVideoCard(
                 Icon(
                     imageVector = Icons.Default.Share,
                     contentDescription = "Share",
-                    tint = Color.White
+                    tint = iconColor
                 )
             }
         }
